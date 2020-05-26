@@ -62,6 +62,46 @@ export const SecondaryButtons = () => (
   </div>
 );
 
+export const DangerButtons = () => (
+  <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-start sm:space-y-0 sm:flex-row sm:items-end sm:justify-around">
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="danger" size="tiny">Tiny Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="danger" size="small">Small Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="danger" size="medium">Medium Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="danger" size="large">Large Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="danger" size="extra_large">Extra Large Button</Button>
+    </span>
+  </div>
+);
+
+export const SuccessButtons = () => (
+  <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-start sm:space-y-0 sm:flex-row sm:items-end sm:justify-around">
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="success" size="tiny">Tiny Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="success" size="small">Small Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="success" size="medium">Medium Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="success" size="large">Large Button</Button>
+    </span>
+    <span className="inline-flex rounded-md shadow-sm">
+      <Button type="success" size="extra_large">Extra Large Button</Button>
+    </span>
+  </div>
+);
+
 export const NormalButtons = () => (
   <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-start sm:space-y-0 sm:flex-row sm:items-end sm:justify-around">
     <span className="inline-flex rounded-md shadow-sm">
