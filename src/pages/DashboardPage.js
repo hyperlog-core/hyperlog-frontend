@@ -1,10 +1,12 @@
 import React from "react";
 import logo from "../logo.svg";
 import { logoutUser } from "../utils/auth";
+import { useApolloClient } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 const DashboardPage = () => {
   let history = useHistory();
+  const client = useApolloClient();
   return(
     <div>
       <div className="bg-gray-800 pb-32">
@@ -54,7 +56,10 @@ const DashboardPage = () => {
                         <div className="py-1 rounded-md bg-white shadow-xs">
                           <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
                           <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                          <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                          <a onClick={() => {
+                            logoutUser().then(() => client.resetStore());
+                            history.push("/");
+                          }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                         </div>
                       </div>
                     </div>
@@ -102,6 +107,7 @@ const DashboardPage = () => {
                 <a className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700" role="menuitem">Settings</a>
                 <button onClick={() => {
                   logoutUser();
+                  client.resetStore();
                   history.push("/");
                 }} className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700" role="menuitem">Sign out</button>
               </div>
