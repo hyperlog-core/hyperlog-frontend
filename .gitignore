@@ -1,4 +1,4 @@
-./src/tailwind.generated.css
+src/tailwind.generated.css
 
 # dependencies
 /node_modules
