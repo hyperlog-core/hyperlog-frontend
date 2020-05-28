@@ -1,5 +1,5 @@
 export function isUserAuthenticated() {
-  if(localStorage.getItem("token")) {
+  if (localStorage.getItem("token")) {
     return true;
   } else {
     return false;
@@ -11,5 +11,5 @@ export function loginUser(token) {
 }
 
 export function logoutUser() {
-  localStorage.removeItem("token")
+  localStorage.removeItem("token");
 }
