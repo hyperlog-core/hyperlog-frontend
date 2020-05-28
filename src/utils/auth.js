@@ -11,10 +11,5 @@ export function loginUser(token) {
 }
 
 export function logoutUser() {
-  return new Promise((resolve, reject) => {
-    if(localStorage.removeItem("token"))
-      resolve("Logged Out");
-    else
-      reject("Some error occurred");
-  })
+  localStorage.removeItem("token")
 }

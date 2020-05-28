@@ -10,6 +10,7 @@ import PrivateRoute from './helpers/PrivateRoute';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import { isUserAuthenticated } from './utils/auth';
+import Logout from './helpers/Logout';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
         <PrivateRoute>
           <Route exact path="/dashboard">
             <DashboardPage />
+          </Route>
+          <Route exact path="/logout">
+            <Logout />
           </Route>
         </PrivateRoute>
       </Switch>
