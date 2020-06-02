@@ -10,8 +10,8 @@ import PulseLoader from "react-spinners/PulseLoader";
 
 const LoginPage = () => {
   const MUTATION_LOGIN_USER = gql`
-    mutation($email: String!, $password: String!) {
-      login(email: $email, password: $password) {
+    mutation($username: String!, $password: String!) {
+      login(username: $username, password: $password) {
         token
       }
     }
@@ -37,16 +37,16 @@ const LoginPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid Email Address").required("Required"),
+      username: Yup.string().required("Required"),
       password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       userLogin({
-        variables: { email: values.email, password: values.password },
+        variables: { username: values.username, password: values.password },
       });
     },
   });
@@ -91,26 +91,25 @@ const LoginPage = () => {
               <form onSubmit={formik.handleSubmit}>
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="block text-sm font-medium leading-5 text-gray-700"
                   >
-                    Email address
+                    Username
                   </label>
                   <div className="mt-1 relative rounded-md shadow-sm">
                     <input
-                      id="email"
-                      type="email"
+                      id="username"
                       onChange={formik.handleChange}
-                      value={formik.values.email}
+                      value={formik.values.username}
                       onBlur={formik.handleBlur}
                       required
                       className={
-                        formik.touched.email && formik.errors.email
+                        formik.touched.username && formik.errors.username
                           ? ERROR_INPUT_CLASS
                           : NORMAL_INPUT_CLASS
                       }
                     />
-                    {formik.touched.email && formik.errors.email ? (
+                    {formik.touched.username && formik.errors.username ? (
                       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                         <svg
                           className="h-5 w-5 text-red-500"
@@ -126,9 +125,12 @@ const LoginPage = () => {
                       </div>
                     ) : null}
                   </div>
-                  {formik.touched.email && formik.errors.email ? (
-                    <p className="mt-2 text-sm text-red-600" id="email-error">
-                      {formik.errors.email}
+                  {formik.touched.username && formik.errors.username ? (
+                    <p
+                      className="mt-2 text-sm text-red-600"
+                      id="username-error"
+                    >
+                      {formik.errors.username}
                     </p>
                   ) : null}
                 </div>
