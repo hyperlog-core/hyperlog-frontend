@@ -372,6 +372,50 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+
+      <div className="hidden sm:block">
+        <div className="py-5">
+          <div className="border-t border-gray-200"> </div>
+        </div>
+      </div>
+
+      <div className="mt-10 sm:mt-0">
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Danger Zone
+              </h3>
+              <p className="mt-1 text-sm leading-5 text-gray-600">
+                Please feel free to drop any feedback you have.
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 md:mt-0 md:col-span-2">
+            <div class="bg-white shadow sm:rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                  Delete your account
+                </h3>
+                <div class="mt-2 max-w-xl text-sm leading-5 text-gray-500">
+                  <p>
+                    Once you delete your account, you will lose all data
+                    associated with it.
+                  </p>
+                </div>
+                <div class="mt-5">
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-50 focus:outline-none focus:border-red-300 focus:shadow-outline-red active:bg-red-200 transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  >
+                    Delete account
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </UserLayout>
   );
 };
