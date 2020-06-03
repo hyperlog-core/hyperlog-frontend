@@ -33,7 +33,7 @@ const LoginPage = () => {
   const NORMAL_INPUT_CLASS =
     "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5";
   const ERROR_INPUT_CLASS =
-    "appearance-none block w-full px-3 py-2 border border-red-300  rounded-md text-red-900 placeholder-red-300  focus:outline-none focus:border-red-300 focus:shadow-outline-red transition duration-150 ease-in-out sm:text-sm sm:leading-5";
+    "appearance-none block w-full px-3 py-2 border border-red-300 rounded-md text-red-900 placeholder-red-300 focus:outline-none focus:border-red-300 focus:shadow-outline-red transition duration-150 ease-in-out sm:text-sm sm:leading-5";
 
   const formik = useFormik({
     initialValues: {
