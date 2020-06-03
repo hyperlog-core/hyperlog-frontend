@@ -8,9 +8,11 @@ import {
 import RegisterPage from "./pages/RegisterPage";
 import PrivateRoute from "./helpers/PrivateRoute";
 import DashboardPage from "./pages/DashboardPage";
+import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import { isUserAuthenticated } from "./utils/auth";
 import Logout from "./helpers/Logout";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
@@ -28,8 +30,12 @@ function App() {
         </Route>
 
         <PrivateRoute>
+          <NavBar />
           <Route exact path="/dashboard">
             <DashboardPage />
+          </Route>
+          <Route exact path="/profile">
+            <ProfilePage />
           </Route>
           <Route exact path="/logout">
             <Logout />
