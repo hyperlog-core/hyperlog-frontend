@@ -1,10 +1,11 @@
 import React from "react";
 import UserLayout from "../layout/UserLayout";
+import GithubConnect from "../components/GithubConnect";
 
 const DashboardPage = () => {
   return (
     <UserLayout header={`Dashboard`}>
-      <h1>Welcome to the user!</h1>
+      <GithubConnect />
     </UserLayout>
   );
 };
