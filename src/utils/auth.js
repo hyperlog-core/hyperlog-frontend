@@ -6,8 +6,13 @@ export function isUserAuthenticated() {
   }
 }
 
-export function loginUser(token) {
-  const currentTime = Date.now() + 86400000;
+export function loginUser(token, remember) {
+  let currentTime;
+  if (remember) {
+    currentTime = Date.now() + 864000000;
+  } else {
+    currentTime = Date.now() + 86400000;
+  }
   localStorage.setItem("expire", currentTime);
   localStorage.setItem("token", token);
 }
