@@ -24,7 +24,7 @@ const LoginPage = () => {
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(MUTATION_LOGIN_USER, {
     onCompleted: (data) => {
-      loginUser(data.login.token);
+      loginUser(data.login.token, formik.values.remember);
       history.push("/dashboard");
     },
     onError: (err) => console.log(err),
@@ -39,10 +39,12 @@ const LoginPage = () => {
     initialValues: {
       username: "",
       password: "",
+      remember: false,
     },
     validationSchema: Yup.object({
       username: Yup.string().required("Required"),
       password: Yup.string().required("Required"),
+      remember: Yup.boolean(),
     }),
     onSubmit: (values) => {
       userLogin({
@@ -180,6 +182,31 @@ const LoginPage = () => {
                       {formik.errors.password}
                     </p>
                   ) : null}
+                </div>
+
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <input
+                      id="remember"
+                      type="checkbox"
+                      className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                      checked={formik.values.remember}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <label
+                      for="remember"
+                      className="ml-2 block text-sm leading-5 text-gray-900"
+                    >
+                      Remember me
+                    </label>
+                  </div>
+
+                  <div className="text-sm leading-5">
+                    <button className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                      Forgot your password?
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-6">

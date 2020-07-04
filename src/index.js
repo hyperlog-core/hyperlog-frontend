@@ -20,6 +20,14 @@ const client = new ApolloClient({
   },
 });
 
+if (
+  localStorage.getItem("expire") &&
+  localStorage.getItem("expire") < Date.now()
+) {
+  localStorage.removeItem("expire");
+  localStorage.removeItem("token");
+}
+
 ReactDOM.render(
   <ApolloProvider client={client}>
     <RecoilRoot>
