@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 import MoonLoader from "react-spinners/MoonLoader";
 import { logoutUser } from "../utils/auth";
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
-import { useHistory } from "react-router-dom";
 import { gql } from "apollo-boost";
+import { currentUser } from "../store/atoms";
+import { useSetRecoilState } from "recoil";
 
 const Logout = () => {
   const client = useApolloClient();
-  const history = useHistory();
+
+  const setUser = useSetRecoilState(currentUser);
 
   const LOGOUT_MUTATION = gql`
     mutation {
@@ -21,13 +23,16 @@ const Logout = () => {
     onCompleted: () => {
       logoutUser();
       client.clearStore();
-      history.push("/login");
+      setUser({
+        loggedIn: false,
+      });
     },
   });
 
   useEffect(() => {
     userLogout();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="flex h-screen">
       <div className="m-auto">
