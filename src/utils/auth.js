@@ -7,9 +7,12 @@ export function isUserAuthenticated() {
 }
 
 export function loginUser(token) {
+  const currentTime = Date.now() + 86400000;
+  localStorage.setItem("expire", currentTime);
   localStorage.setItem("token", token);
 }
 
 export function logoutUser() {
+  localStorage.removeItem("expire");
   localStorage.removeItem("token");
 }
