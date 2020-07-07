@@ -133,11 +133,9 @@ const RegisterPage = () => {
                   </h3>
                   <div className="mt-2 text-sm leading-5 text-red-700">
                     <ul className="list-disc pl-5">
-                      <li>
-                        {mutationData.register.errors.forEach((err) => (
-                          <li className="mt-1">{err}</li>
-                        ))}
-                      </li>
+                      {mutationData.register.errors.forEach((err) => (
+                        <li className="mt-1">{err}</li>
+                      ))}
                     </ul>
                   </div>
                 </div>
