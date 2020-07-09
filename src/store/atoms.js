@@ -10,6 +10,7 @@ export const currentUser = atom({
     : {
         loggedIn: true,
         user: {
+          id: "",
           email: "",
           firstName: "",
           lastName: "",

@@ -24,6 +24,7 @@ function App() {
   const GET_CURRENT_USER_QUERY = gql`
     query {
       thisUser {
+        id
         email
         firstName
         lastName
