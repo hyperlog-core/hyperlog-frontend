@@ -49,7 +49,7 @@ const ProfileInfo = ({ profile, analyse, loading }) => {
         </div>
       </div>
     );
-  } else {
+  } else if (profile.turn > 0) {
     return (
       <div className="bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:p-6">
@@ -75,6 +75,16 @@ const ProfileInfo = ({ profile, analyse, loading }) => {
                 "Start Analysis"
               )}
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="bg-white shadow sm:rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <div className="text-lg text-center leading-6 font-medium text-gray-900">
+            <PulseLoader size="20px" color="#374151" />
           </div>
         </div>
       </div>
