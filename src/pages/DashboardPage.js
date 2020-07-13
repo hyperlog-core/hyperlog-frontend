@@ -90,13 +90,16 @@ const DashboardPage = () => {
           ...profileInfo,
           status: "running",
         });
-        fetchUserData(user.contents.user.id).then(
-          (result) => {
-            setProfileInfo(result);
-          },
-          (error) => {
-            setError(error);
-          }
+        setTimeout(
+          fetchUserData(user.contents.user.id).then(
+            (result) => {
+              setProfileInfo(result);
+            },
+            (error) => {
+              setError(error);
+            }
+          ),
+          2000
         );
       } else {
         setMutError(data.analyseProfile.errors[0]);
