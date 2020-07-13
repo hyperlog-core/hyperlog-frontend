@@ -52,29 +52,29 @@ const ProfileInfo = ({ profile, analyse, loading }) => {
   } else if (profile.turn > 0) {
     return (
       <div className="bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Analyse your profile
-          </h3>
-          <div className="mt-2 max-w-xl text-sm leading-5 text-gray-500">
-            <p>
-              Have some really cool new contributions/repositories added to your
-              profile? No worries, let's start the analysis again!
-            </p>
-          </div>
-          <div className="mt-5">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-white bg-teal-400 hover:bg-teal-500 focus:outline-none focus:border-teal-200 focus:shadow-outline-teal active:bg-teal-300 active:text-gray-100 transition ease-in-out duration-150 sm:text-sm sm:leading-5"
-              onClick={analyse}
-              disabled={loading}
-            >
-              {loading ? (
-                <PulseLoader size="10" color="#ffffff" />
-              ) : (
-                "Start Analysis"
-              )}
-            </button>
+        <div className="bg-white px-4 py-5 sm:px-6">
+          <div className="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-no-wrap">
+            <div className="ml-4 mt-4">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Profile Analysis
+              </h3>
+              <p className="mt-1 text-sm leading-5 text-gray-500">
+                We have analysed your profile. Please follow the steps to embed
+                your profile on your website!
+              </p>
+            </div>
+            <div className="ml-4 mt-4 flex-shrink-0">
+              <span className="inline-flex rounded-md shadow-sm">
+                <button
+                  type="button"
+                  onClick={analyse}
+                  disabled={loading}
+                  className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-teal-400 hover:bg-teal-500 focus:outline-none focus:border-teal-200 focus:shadow-outline-teal active:bg-teal-300 active:text-gray-100 transition ease-in-out duration-150"
+                >
+                  Analyse Profile Again
+                </button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
