@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PulseLoader from "react-spinners/PulseLoader";
+import GridLoader from "react-spinners/GridLoader";
 
 const disabledButtonClass =
   "inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 opacity-50 cursor-not-allowed shadow-sm sm:text-sm sm:leading-5";
@@ -9,40 +10,49 @@ const buttonClass =
 
 const PriorAnalysisComplete = ({ profile, analyse, loading }) => {
   const [copied, setCopied] = useState(false);
-  const userCopyCode = `<script type="text/javascript">window.hyperlogID="${profile.user_id}";(function(){d =document;s=d.createElement("script");s.src="dist/client.js";s.async = 1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>`;
+  const userCopyCode = `<script type="text/javascript">window.hyperlogID="${profile.user_id}";(function(){d =document;s=d.createElement("script");s.src="dist/client.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>`;
   return (
     <div className="flex w-full justify-center mt-5">
       <div class="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full sm:p-6">
         <div>
-          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-            <svg
-              class="h-6 w-6 text-green-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
+          {profile.status === "running" ? (
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-teal-100">
+              <GridLoader size="4px" margin="2" color="#047481" />
+            </div>
+          ) : (
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-teal-100">
+              <svg
+                class="h-6 w-6 text-teal-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          )}
           <div class="mt-3 text-center sm:mt-5">
             <h3
-              class="text-lg leading-6 font-medium text-gray-900"
+              class="text-lg leading-6 font-semibold text-gray-900"
               id="modal-headline"
             >
-              Analysis Successful!
+              {profile.status === "running"
+                ? "We're analysing your profile"
+                : "Analysis Successful!"}
             </h3>
             <div class="mt-2">
               <p class="text-sm leading-5 text-gray-500">
-                We have analysed your profile. Please follow the steps to embed
-                your profile on your website!
+                {profile.status === "running"
+                  ? "We have started the analysis of your profile. Why don't you just copy and paste the code below on your site. We'll embed your profile as soon as it is completed analysing."
+                  : "We have analysed your profile. Please follow the steps to embed your profile on your website!"}
               </p>
               <div className="bg-gray-100 mt-5 select-all text-left p-5">
-                <code class="text-sm leading-5 text-gray-500">
+                <code class="text-sm leading-5 text-gray-600">
                   {userCopyCode}
                 </code>
               </div>
@@ -66,15 +76,17 @@ const PriorAnalysisComplete = ({ profile, analyse, loading }) => {
             <button
               type="button"
               onClick={analyse}
-              disabled={loading || profile.turn === 5}
+              disabled={
+                loading || profile.turn === 5 || profile.status === "running"
+              }
               class={
-                loading || profile.turn === 5
+                loading || profile.turn === 5 || profile.status === "running"
                   ? disabledButtonClass
                   : buttonClass
               }
             >
-              {loading ? (
-                <PulseLoader size="10" color="#ffffff" />
+              {loading || profile.status === "running" ? (
+                <PulseLoader size="10px" />
               ) : (
                 `Analyse Again (${5 - profile.turn})`
               )}

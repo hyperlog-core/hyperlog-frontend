@@ -24,22 +24,13 @@ const fetchUserData = (userID) => {
 };
 
 const ProfileInfo = ({ profile, analyse, loading }) => {
-  if (profile.status === "running") {
+  if (profile.status === "running" || profile.turn > 0) {
     return (
-      <div className="bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            We're analysing your profile. It might take a while
-          </h3>
-          <div className="mt-2 max-w-xl text-sm leading-5 text-gray-500">
-            <p>
-              We've started the analysis of your profile. This process takes a
-              little while, so why don't you go grab a coffee, or do some other
-              work till then. We'll notify you on your email once done.
-            </p>
-          </div>
-        </div>
-      </div>
+      <PriorAnalysisComplete
+        profile={profile}
+        analyse={analyse}
+        loading={loading}
+      />
     );
   } else if (profile.turn === 0) {
     return (
@@ -71,14 +62,6 @@ const ProfileInfo = ({ profile, analyse, loading }) => {
         </div>
       </div>
     );
-  } else if (profile.turn > 0) {
-    return (
-      <PriorAnalysisComplete
-        profile={profile}
-        analyse={analyse}
-        loading={loading}
-      />
-    );
   } else {
     return (
       <div className="flex w-full h-64 justify-center items-center">
@@ -103,6 +86,10 @@ const DashboardPage = () => {
   ] = useMutation(MUTATION_ANALYSE_USER_PROFILE, {
     onCompleted: (data) => {
       if (data.analyseProfile.success) {
+        setProfileInfo({
+          ...profileInfo,
+          status: "running",
+        });
         fetchUserData(user.contents.user.id).then(
           (result) => {
             setProfileInfo(result);
