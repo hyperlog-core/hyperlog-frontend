@@ -7,6 +7,12 @@ import "./tailwind.generated.css";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { RecoilRoot } from "recoil";
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn:
+    "https://50ef3f81d3604f56a7fff8d8f4490863@o310860.ingest.sentry.io/5338356",
+});
 
 const client = new ApolloClient({
   uri: "http://localhost:8000/graphql/",
