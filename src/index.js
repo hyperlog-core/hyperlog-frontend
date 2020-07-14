@@ -15,7 +15,7 @@ Sentry.init({
 });
 
 const client = new ApolloClient({
-  uri: "http://localhost:8000/graphql/",
+  uri: "https://gateway.hyperlog.io/graphql/",
   request: (operation) => {
     const token = localStorage.getItem("token");
     operation.setContext({
