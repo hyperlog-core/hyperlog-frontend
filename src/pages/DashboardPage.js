@@ -114,12 +114,13 @@ const DashboardPage = () => {
         fetchUserData(user.contents.user.id).then(
           (result) => {
             setProfileInfo(result);
+            setIsLoaded(true);
           },
           (error) => {
             setError(error);
+            setIsLoaded(true);
           }
         );
-        setIsLoaded(true);
       }
       break;
     case "hasError":

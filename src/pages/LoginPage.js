@@ -195,7 +195,7 @@ const LoginPage = () => {
                       onBlur={formik.handleBlur}
                     />
                     <label
-                      for="remember"
+                      htmlFor="remember"
                       className="ml-2 block text-sm leading-5 text-gray-900"
                     >
                       Remember me
