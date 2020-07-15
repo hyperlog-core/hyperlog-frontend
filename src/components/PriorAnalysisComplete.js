@@ -52,7 +52,7 @@ const PriorAnalysisComplete = ({ profile, analyse, loading }) => {
                   : "We have analysed your profile. Please follow the steps to embed your profile on your website!"}
               </p>
               <div className="bg-gray-100 mt-5 select-all text-left p-5">
-                <code className="text-sm leading-5 text-gray-600">
+                <code className="text-sm leading-5 text-gray-600 break-all">
                   {userCopyCode}
                 </code>
               </div>
