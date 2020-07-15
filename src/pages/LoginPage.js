@@ -7,17 +7,27 @@ import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
 import { loginUser } from "../utils/auth";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useSetRecoilState } from "recoil";
+import { currentUser } from "../store/atoms";
 
 const LoginPage = () => {
   const MUTATION_LOGIN_USER = gql`
     mutation($username: String!, $password: String!) {
       login(username: $username, password: $password) {
         token
+        user {
+          id
+          email
+          firstName
+          lastName
+        }
       }
     }
   `;
 
   let history = useHistory();
+
+  const setUser = useSetRecoilState(currentUser);
 
   const [
     userLogin,
@@ -25,6 +35,10 @@ const LoginPage = () => {
   ] = useMutation(MUTATION_LOGIN_USER, {
     onCompleted: (data) => {
       loginUser(data.login.token, formik.values.remember);
+      setUser({
+        loggedIn: true,
+        user: data.login.user,
+      });
       history.push("/dashboard");
     },
     onError: (err) => console.log(err),
