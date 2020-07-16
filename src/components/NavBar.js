@@ -13,16 +13,6 @@ const NavBar = () => {
     exact: true,
   });
 
-  const projectsMatch = useRouteMatch({
-    path: "/projects",
-    exact: true,
-  });
-
-  const domainsMatch = useRouteMatch({
-    path: "/domains",
-    exact: true,
-  });
-
   const GET_CURRENT_USER_QUERY = gql`
     query {
       thisUser {
@@ -106,26 +96,6 @@ const NavBar = () => {
                 >
                   Dashboard
                 </Link>
-                <Link
-                  to="/projects"
-                  className={`ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 ${
-                    projectsMatch
-                      ? `text-white bg-gray-900`
-                      : `text-gray-300 hover:text-white hover:bg-gray-700`
-                  } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
-                >
-                  Projects
-                </Link>
-                <Link
-                  to="/domains"
-                  className={`ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 ${
-                    domainsMatch
-                      ? `text-white bg-gray-900`
-                      : `text-gray-300 hover:text-white hover:bg-gray-700`
-                  } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
-                >
-                  Domains
-                </Link>
               </div>
             </div>
           </div>
@@ -190,12 +160,6 @@ const NavBar = () => {
                       Your Profile
                     </Link>
                     <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-                    >
-                      Settings
-                    </Link>
-                    <Link
                       to="/logout"
                       className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                     >
@@ -220,26 +184,6 @@ const NavBar = () => {
             } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
           >
             Dashboard
-          </Link>
-          <Link
-            to="/projects"
-            className={`mt-1 block px-3 py-2 rounded-md text-base font-medium ${
-              projectsMatch
-                ? `text-white bg-gray-900`
-                : `text-gray-300 hover:text-white hover:bg-gray-700`
-            } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
-          >
-            Projects
-          </Link>
-          <Link
-            to="/domains"
-            className={`mt-1 block px-3 py-2 rounded-md text-base font-medium ${
-              domainsMatch
-                ? `text-white bg-gray-900`
-                : `text-gray-300 hover:text-white hover:bg-gray-700`
-            } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
-          >
-            Domains
           </Link>
         </div>
       </div>
