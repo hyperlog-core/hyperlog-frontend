@@ -7,6 +7,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DeleteConfirm from "../components/DeleteConfirm";
+import Notification from "../components/Notification";
 
 const GET_CURRENT_USER_QUERY = gql`
   query {
@@ -39,16 +40,25 @@ const MUTATION_UPDATE_USER_PASSWORD = gql`
 const ProfilePage = () => {
   const history = useHistory();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [notification, setNotification] = useState(false);
 
   const [
     updateUser,
     { loading: mutationLoading, data: mutationData },
-  ] = useMutation(MUTATION_UPDATE_USER_INFO);
+  ] = useMutation(MUTATION_UPDATE_USER_INFO, {
+    onCompleted(_data) {
+      setNotification(true);
+    },
+  });
 
   const [
     updatePassword,
     { loading: passwordLoading, data: passwordData },
-  ] = useMutation(MUTATION_UPDATE_USER_PASSWORD);
+  ] = useMutation(MUTATION_UPDATE_USER_PASSWORD, {
+    onCompleted(_data) {
+      setNotification(true);
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -104,6 +114,7 @@ const ProfilePage = () => {
 
   return (
     <UserLayout header={`Profile`}>
+      <Notification show={notification} toggle={setNotification} />
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
