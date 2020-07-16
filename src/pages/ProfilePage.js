@@ -46,8 +46,10 @@ const ProfilePage = () => {
     updateUser,
     { loading: mutationLoading, data: mutationData },
   ] = useMutation(MUTATION_UPDATE_USER_INFO, {
-    onCompleted(_data) {
-      setNotification(true);
+    onCompleted(data) {
+      if (data.updateUser.success) {
+        setNotification(true);
+      }
     },
   });
 
@@ -55,8 +57,10 @@ const ProfilePage = () => {
     updatePassword,
     { loading: passwordLoading, data: passwordData },
   ] = useMutation(MUTATION_UPDATE_USER_PASSWORD, {
-    onCompleted(_data) {
-      setNotification(true);
+    onCompleted(data) {
+      if (data.updatePassword.success) {
+        setNotification(true);
+      }
     },
   });
 
@@ -98,6 +102,7 @@ const ProfilePage = () => {
       updatePassword({
         variables: values,
       });
+      passFormik.resetForm();
     },
   });
 
@@ -338,7 +343,9 @@ const ProfilePage = () => {
             <form onSubmit={passFormik.handleSubmit}>
               <div className="shadow overflow-hidden sm:rounded-md">
                 <div className="px-4 py-5 bg-white sm:p-6">
-                  {passwordData && !passwordLoading && passwordData.errors ? (
+                  {passwordData &&
+                  !passwordLoading &&
+                  passwordData.updatePassword.errors ? (
                     <div className="rounded-md bg-red-50 p-4 mb-6">
                       <div className="flex">
                         <div className="flex-shrink-0">
@@ -517,7 +524,7 @@ const ProfilePage = () => {
                     {passwordLoading ? (
                       <PulseLoader size="8px" color="#ffffff" />
                     ) : (
-                      "Save"
+                      "Update password"
                     )}
                   </button>
                 </div>
