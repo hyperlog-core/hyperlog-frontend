@@ -1,7 +1,31 @@
 import React from "react";
 import Transition from "../helpers/Transition";
+import { gql } from "apollo-boost";
+import { useMutation } from "@apollo/react-hooks";
+import { logoutUser } from "../utils/auth";
+import { useHistory } from "react-router-dom";
+import PulseLoader from "react-spinners/PulseLoader";
+
+const MUTATION_DELETE_USER = gql`
+  mutation {
+    deleteUser {
+      errors
+      success
+    }
+  }
+`;
 
 const DeleteConfirm = ({ isOpen, confirm }) => {
+  const history = useHistory();
+  const [deleteUser, { loading, error }] = useMutation(MUTATION_DELETE_USER, {
+    onCompleted({ data }) {
+      if (data.deleteUser.success) {
+        logoutUser();
+        history.push("/");
+      }
+    },
+  });
+
   return (
     <div>
       <Transition
@@ -13,7 +37,10 @@ const DeleteConfirm = ({ isOpen, confirm }) => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div class="fixed inset-0 transition-opacity">
+        <div
+          class="fixed inset-0 transition-opacity"
+          onClick={() => confirm(false)}
+        >
           <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
       </Transition>
@@ -71,8 +98,13 @@ const DeleteConfirm = ({ isOpen, confirm }) => {
               <button
                 type="button"
                 class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                onClick={() => deleteUser()}
               >
-                Deactivate
+                {loading ? (
+                  <PulseLoader size="10px" color="#ffffff" />
+                ) : (
+                  "Delete"
+                )}
               </button>
             </span>
             <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">

@@ -306,13 +306,10 @@ const ProfilePage = () => {
                   >
                     Delete account
                   </button>
-                  <DeleteConfirm
-                    isOpen={confirmDelete}
-                    confirm={setConfirmDelete}
-                  />
                 </div>
               </div>
             </div>
+            <DeleteConfirm isOpen={confirmDelete} confirm={setConfirmDelete} />
           </div>
         </div>
       </div>
