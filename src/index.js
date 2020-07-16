@@ -9,13 +9,15 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { RecoilRoot } from "recoil";
 import * as Sentry from "@sentry/react";
 
-Sentry.init({
-  dsn:
-    "https://50ef3f81d3604f56a7fff8d8f4490863@o310860.ingest.sentry.io/5338356",
-});
+if (process.env.NODE_ENV === "production") {
+  Sentry.init({
+    dsn:
+      "https://50ef3f81d3604f56a7fff8d8f4490863@o310860.ingest.sentry.io/5338356",
+  });
+}
 
 const client = new ApolloClient({
-  uri: "https://gateway.hyperlog.io/graphql/",
+  uri: process.env.REACT_APP_BACKEND_URL,
   request: (operation) => {
     const token = localStorage.getItem("token");
     operation.setContext({
