@@ -5,8 +5,8 @@ import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { isGithubConnected, currentUser } from "../store/atoms";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
+import ProfileInfo from "../components/ProfileInfo";
 import PulseLoader from "react-spinners/PulseLoader";
-import PriorAnalysisComplete from "../components/PriorAnalysisComplete";
 
 const MUTATION_ANALYSE_USER_PROFILE = gql`
   mutation {
@@ -18,57 +18,9 @@ const MUTATION_ANALYSE_USER_PROFILE = gql`
 `;
 
 const fetchUserData = (userID) => {
-  return fetch(
-    `https://api.hyperlog.io/gateway/profile_info/${userID}`
-  ).then((res) => res.json());
-};
-
-const ProfileInfo = ({ profile, analyse, loading }) => {
-  if (profile.status === "running" || profile.turn > 0) {
-    return (
-      <PriorAnalysisComplete
-        profile={profile}
-        analyse={analyse}
-        loading={loading}
-      />
-    );
-  } else if (profile.turn === 0) {
-    return (
-      <div className="bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Do your first analysis
-          </h3>
-          <div className="mt-2 max-w-xl text-sm leading-5 text-gray-500">
-            <p>
-              It seems like this is your first time here. Let's get started with
-              the first ever analysis of your profile.
-            </p>
-          </div>
-          <div className="mt-5">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-white bg-teal-400 hover:bg-teal-500 focus:outline-none focus:border-teal-200 focus:shadow-outline-teal active:bg-teal-300 active:text-gray-100 transition ease-in-out duration-150 sm:text-sm sm:leading-5"
-              onClick={analyse}
-              disabled={loading}
-            >
-              {loading ? (
-                <PulseLoader size="10" color="#ffffff" />
-              ) : (
-                "Start Analysis"
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="flex w-full h-64 justify-center items-center">
-        <PulseLoader size="20px" color="#374151" />
-      </div>
-    );
-  }
+  return fetch(`${process.env.REACT_APP_AWS_URL}/user/${userID}`).then((res) =>
+    res.json()
+  );
 };
 
 const DashboardPage = () => {
@@ -131,7 +83,11 @@ const DashboardPage = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading</div>;
+    return (
+      <div className="flex w-full h-64 justify-center items-center">
+        <PulseLoader size="20px" color="#374151" />
+      </div>
+    );
   } else {
     if (!githubConnection) {
       return (
