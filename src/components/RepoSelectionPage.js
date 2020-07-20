@@ -52,7 +52,11 @@ const IndividualRepo = ({ isSelected, index, repo, onClick }) => {
                   {repo.full_name}
                 </div>
                 {repo.description ? (
-                  <div class="mt-2 flex items-center text-sm leading-5 text-gray-500">
+                  <div
+                    class={`mt-2 flex items-center text-sm leading-5 ${
+                      isSelected ? "text-gray-800 font-medium" : "text-gray-500"
+                    }`}
+                  >
                     <svg
                       class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                       fill="currentColor"
