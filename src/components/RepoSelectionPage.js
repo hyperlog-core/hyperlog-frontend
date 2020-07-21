@@ -138,7 +138,7 @@ const MUTATION_SELECT_REPOS = gql`
   }
 `;
 
-const RepoSelectionPage = ({ repos, selected, editMode }) => {
+const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
 
@@ -199,7 +199,7 @@ const RepoSelectionPage = ({ repos, selected, editMode }) => {
           </div>
         </div>
       ) : null}
-      {editMode ? (
+      {editMode && firstTime ? (
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
           <div className="flex">
             <div>
@@ -237,8 +237,7 @@ const RepoSelectionPage = ({ repos, selected, editMode }) => {
             </div>
           </div>
         </div>
-      ) : // TODO: Add header for this section with editModeToggle
-      null}
+      ) : null}
       <ul className="rounded-md text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
         {Object.keys(repos).map((repo, i) => {
           if (!editMode && selectedPositions.includes(i)) {

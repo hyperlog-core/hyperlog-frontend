@@ -10,6 +10,7 @@ const ProfileInfo = ({ profile, analyse, loading }) => {
         repos={profile.repos}
         selected={profile.selectedRepos ?? []}
         editMode={true}
+        firstTime={true}
       />
     );
   } else if (profile.selectedRepos) {
