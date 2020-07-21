@@ -16,13 +16,15 @@ const DashboardPage = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [profileInfo, setProfileInfo] = useState({});
+  const [calledOnce, setCalledOnce] = useState(false);
 
   const githubConnection = useRecoilValue(isGithubConnected);
   const user = useRecoilValueLoadable(currentUser);
 
   switch (user.state) {
     case "hasValue":
-      if (user.contents.user && !isLoaded) {
+      if (user.contents.user && !isLoaded && !calledOnce) {
+        setCalledOnce(true);
         fetchUserData(user.contents.user.id).then(
           (result) => {
             setProfileInfo(result);
