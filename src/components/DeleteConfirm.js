@@ -17,7 +17,7 @@ const MUTATION_DELETE_USER = gql`
 
 const DeleteConfirm = ({ isOpen, confirm }) => {
   const history = useHistory();
-  const [deleteUser, { loading, error }] = useMutation(MUTATION_DELETE_USER, {
+  const [deleteUser, { loading }] = useMutation(MUTATION_DELETE_USER, {
     onCompleted({ data }) {
       if (data.deleteUser.success) {
         logoutUser();
