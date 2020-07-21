@@ -74,9 +74,9 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                       viewBox="0 0 20 20"
                     >
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       ></path>
                     </svg>
                     <span className="truncate">{repo.description}</span>
@@ -130,7 +130,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
 };
 
 const MUTATION_SELECT_REPOS = gql`
-  mutation($repos: [String]) {
+  mutation($repos: [String!]!) {
     selectRepos(repos: $repos) {
       success
       errors
@@ -221,11 +221,22 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
               </h3>
             </div>
             <div className="ml-4 mt-2 flex-shrink-0">
+              {selectedPositions.length > 0 ? (
+                <span className="inline-flex rounded-md shadow-sm mr-2">
+                  <button
+                    onClick={() => setSelectedPositions([])}
+                    type="button"
+                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150"
+                  >
+                    Unselect all
+                  </button>
+                </span>
+              ) : null}
               <span className="inline-flex rounded-md shadow-sm">
                 <button
                   onClick={() => submit()}
                   type="button"
-                  className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700"
+                  className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition ease-in-out duration-150"
                 >
                   {mutationLoading ? (
                     <PulseLoader size="10px" color="#ffffff" />
@@ -239,31 +250,34 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
         </div>
       ) : null}
       <ul className="rounded-md text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-        {Object.keys(repos).map((repo, i) => {
-          if (!editMode && selectedPositions.includes(i)) {
-            return (
-              <IndividualRepo
-                key={i}
-                index={i}
-                repo={repos[repo]}
-                isSelected={selectedPositions.includes(i)}
-                isEditing={editMode}
-                onClick={() => toggleSelection(i)}
-              />
-            );
-          } else if (editMode) {
-            return (
-              <IndividualRepo
-                key={i}
-                index={i}
-                repo={repos[repo]}
-                isSelected={selectedPositions.includes(i)}
-                isEditing={editMode}
-                onClick={() => toggleSelection(i)}
-              />
-            );
-          }
-        })}
+        {
+          // eslint-disable-next-line array-callback-return
+          Object.keys(repos).map((repo, i) => {
+            if (!editMode && selectedPositions.includes(i)) {
+              return (
+                <IndividualRepo
+                  key={i}
+                  index={i}
+                  repo={repos[repo]}
+                  isSelected={selectedPositions.includes(i)}
+                  isEditing={editMode}
+                  onClick={() => toggleSelection(i)}
+                />
+              );
+            } else if (editMode) {
+              return (
+                <IndividualRepo
+                  key={i}
+                  index={i}
+                  repo={repos[repo]}
+                  isSelected={selectedPositions.includes(i)}
+                  isEditing={editMode}
+                  onClick={() => toggleSelection(i)}
+                />
+              );
+            }
+          })
+        }
       </ul>
     </div>
   );

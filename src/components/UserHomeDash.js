@@ -5,7 +5,7 @@ import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
 const MUTATION_SELECT_REPOS = gql`
-  mutation($repos: [String]) {
+  mutation($repos: [String!]!) {
     selectRepos(repos: $repos) {
       success
       errors
@@ -25,7 +25,7 @@ const UserHomeDash = ({ profile }) => {
           setMutError(data.selectRepos.errors[0]);
         }
       },
-      onError: (err) => setMutError(err),
+      onError: (err) => console.log(err),
     }
   );
 
