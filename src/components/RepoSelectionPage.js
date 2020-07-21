@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 
-const IndividualRepo = ({ isSelected, index, repo, onClick }) => {
+const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
   const classColors = (languageName) => {
     switch (languageName) {
       case "JavaScript":
@@ -37,7 +37,7 @@ const IndividualRepo = ({ isSelected, index, repo, onClick }) => {
       <div
         onClick={onClick}
         className={`block ${
-          isSelected
+          isSelected && isEditing
             ? "bg-gray-100 hover:bg-gray-200 focus:outline-none focus:bg-gray-200"
             : "hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
         } transition duration-150 ease-in-out`}
@@ -55,7 +55,7 @@ const IndividualRepo = ({ isSelected, index, repo, onClick }) => {
               <div>
                 <div
                   className={`text-sm leading-5 ${
-                    isSelected ? "font-bold" : "font-medium"
+                    isSelected && isEditing ? "font-bold" : "font-medium"
                   } text-indigo-600 truncate`}
                 >
                   {repo.full_name}
@@ -63,7 +63,9 @@ const IndividualRepo = ({ isSelected, index, repo, onClick }) => {
                 {repo.description ? (
                   <div
                     className={`mt-2 flex items-center text-sm leading-5 ${
-                      isSelected ? "text-gray-800 font-medium" : "text-gray-500"
+                      isSelected && isEditing
+                        ? "text-gray-800 font-medium"
+                        : "text-gray-500"
                     }`}
                   >
                     <svg
@@ -105,7 +107,7 @@ const IndividualRepo = ({ isSelected, index, repo, onClick }) => {
                 </div>
               </div>
             </div>
-            {isSelected ? (
+            {isSelected && isEditing ? (
               <div>
                 <svg
                   className="h-5 w-5"
@@ -136,10 +138,17 @@ const MUTATION_SELECT_REPOS = gql`
   }
 `;
 
-const RepoSelectionPage = ({ repos }) => {
+const RepoSelectionPage = ({ repos, selected, editMode }) => {
   const history = useHistory();
-  const [selectedPositions, setSelectedPositions] = useState([]);
   const [mutError, setMutError] = useState(null);
+
+  if (selected.length > 0) {
+    var selectedIndexes = selected.map((repo) =>
+      Object.keys(repos).indexOf(repo)
+    );
+  }
+
+  const [selectedPositions, setSelectedPositions] = useState(selectedIndexes);
 
   const [selectRepos, { loading: mutationLoading }] = useMutation(
     MUTATION_SELECT_REPOS,
@@ -156,13 +165,15 @@ const RepoSelectionPage = ({ repos }) => {
   );
 
   const toggleSelection = (i) => {
-    if (selectedPositions.includes(i)) {
-      setSelectedPositions(selectedPositions.filter((m) => m !== i));
-    } else {
-      if (selectedPositions.length === 5) {
-        alert("Sorry, no more selections allowed.");
+    if (editMode) {
+      if (selectedPositions.includes(i)) {
+        setSelectedPositions(selectedPositions.filter((m) => m !== i));
       } else {
-        setSelectedPositions([...selectedPositions, i]);
+        if (selectedPositions.length === 5) {
+          alert("Sorry, no more selections allowed.");
+        } else {
+          setSelectedPositions([...selectedPositions, i]);
+        }
       }
     }
   };
@@ -187,7 +198,8 @@ const RepoSelectionPage = ({ repos }) => {
             </div>
           </div>
         </div>
-      ) : (
+      ) : null}
+      {editMode ? (
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
           <div className="flex">
             <div>
@@ -199,42 +211,59 @@ const RepoSelectionPage = ({ repos }) => {
             </div>
           </div>
         </div>
-      )}
-      <div className="bg-white px-4 py-5 sm:px-6">
-        <div className="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-no-wrap">
-          <div className="ml-4 mt-2">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Select 5 repositories
-            </h3>
-          </div>
-          <div className="ml-4 mt-2 flex-shrink-0">
-            <span className="inline-flex rounded-md shadow-sm">
-              <button
-                onClick={() => submit()}
-                type="button"
-                className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700"
-              >
-                {mutationLoading ? (
-                  <PulseLoader size="10px" color="#ffffff" />
-                ) : (
-                  "Proceed"
-                )}
-              </button>
-            </span>
+      ) : null}
+      {editMode ? (
+        <div className="bg-white px-4 py-5 sm:px-6">
+          <div className="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-no-wrap">
+            <div className="ml-4 mt-2">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Select 5 repositories
+              </h3>
+            </div>
+            <div className="ml-4 mt-2 flex-shrink-0">
+              <span className="inline-flex rounded-md shadow-sm">
+                <button
+                  onClick={() => submit()}
+                  type="button"
+                  className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700"
+                >
+                  {mutationLoading ? (
+                    <PulseLoader size="10px" color="#ffffff" />
+                  ) : (
+                    "Proceed"
+                  )}
+                </button>
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      ) : // TODO: Add header for this section with editModeToggle
+      null}
       <ul className="rounded-md text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
         {Object.keys(repos).map((repo, i) => {
-          return (
-            <IndividualRepo
-              key={i}
-              index={i}
-              repo={repos[repo]}
-              isSelected={selectedPositions.includes(i)}
-              onClick={() => toggleSelection(i)}
-            />
-          );
+          if (!editMode && selectedPositions.includes(i)) {
+            return (
+              <IndividualRepo
+                key={i}
+                index={i}
+                repo={repos[repo]}
+                isSelected={selectedPositions.includes(i)}
+                isEditing={editMode}
+                onClick={() => toggleSelection(i)}
+              />
+            );
+          } else if (editMode) {
+            return (
+              <IndividualRepo
+                key={i}
+                index={i}
+                repo={repos[repo]}
+                isSelected={selectedPositions.includes(i)}
+                isEditing={editMode}
+                onClick={() => toggleSelection(i)}
+              />
+            );
+          }
         })}
       </ul>
     </div>
