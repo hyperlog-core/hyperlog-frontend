@@ -142,10 +142,10 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
 
+  var selectedIndexes = [];
+
   if (selected.length > 0) {
-    var selectedIndexes = selected.map((repo) =>
-      Object.keys(repos).indexOf(repo)
-    );
+    selectedIndexes = selected.map((repo) => Object.keys(repos).indexOf(repo));
   }
 
   const [selectedPositions, setSelectedPositions] = useState(selectedIndexes);

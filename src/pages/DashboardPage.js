@@ -5,6 +5,7 @@ import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { isGithubConnected, currentUser } from "../store/atoms";
 import ProfileInfo from "../components/ProfileInfo";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useHistory } from "react-router-dom";
 
 const fetchUserData = (userID) => {
   return fetch(`${process.env.REACT_APP_AWS_URL}/user/${userID}`).then((res) =>
@@ -18,6 +19,8 @@ const DashboardPage = () => {
   const [profileInfo, setProfileInfo] = useState({});
   const [calledOnce, setCalledOnce] = useState(false);
 
+  const history = useHistory();
+
   const githubConnection = useRecoilValue(isGithubConnected);
   const user = useRecoilValueLoadable(currentUser);
 
@@ -27,7 +30,11 @@ const DashboardPage = () => {
         setCalledOnce(true);
         fetchUserData(user.contents.user.id).then(
           (result) => {
-            setProfileInfo(result);
+            if (result) {
+              setProfileInfo(result);
+            } else {
+              history.go();
+            }
             setIsLoaded(true);
           },
           (error) => {
