@@ -5,7 +5,7 @@ import exclamation from "../exclamation.svg";
 const connect_github = () => {
   window.open(
     `${
-      process.env.REACT_APP_BACKEND_HOST
+      process.env.REACT_APP_BACKEND_URL
     }/connect_github?token=${localStorage.getItem("token")}`
   );
 };
