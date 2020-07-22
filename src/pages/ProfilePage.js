@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import DeleteConfirm from "../components/DeleteConfirm";
 import Notification from "../components/Notification";
+import Portal from "../Portal";
 
 const GET_CURRENT_USER_QUERY = gql`
   query {
@@ -575,7 +576,12 @@ const ProfilePage = () => {
                 </div>
               </div>
             </div>
-            <DeleteConfirm isOpen={confirmDelete} confirm={setConfirmDelete} />
+            <Portal>
+              <DeleteConfirm
+                isOpen={confirmDelete}
+                confirm={setConfirmDelete}
+              />
+            </Portal>
           </div>
         </div>
       </div>

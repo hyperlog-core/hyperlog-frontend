@@ -1,7 +1,7 @@
 import React from "react";
 import Transition from "../helpers/Transition";
 
-const Notification = ({ show, toggle }) => {
+const Notification = ({ show, toggle, primaryText, secondaryText }) => {
   return (
     <div className="fixed inset-0 flex z-50 items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
       <Transition
@@ -34,10 +34,10 @@ const Notification = ({ show, toggle }) => {
                 </div>
                 <div className="ml-3 w-0 flex-1 pt-0.5">
                   <p className="text-sm leading-5 font-medium text-gray-900">
-                    Successfully saved!
+                    {primaryText}
                   </p>
                   <p className="mt-1 text-sm leading-5 text-gray-500">
-                    The data you submitted is successfully updated!
+                    {secondaryText}
                   </p>
                 </div>
                 <div className="ml-4 flex-shrink-0 flex">

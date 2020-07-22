@@ -27,7 +27,13 @@ const DeleteConfirm = ({ isOpen, confirm }) => {
   });
 
   return (
-    <div>
+    <div
+      className={
+        isOpen
+          ? "fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
+          : ""
+      }
+    >
       <Transition
         show={isOpen}
         enter="ease-out duration-300"

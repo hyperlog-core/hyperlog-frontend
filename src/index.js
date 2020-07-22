@@ -40,7 +40,9 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <RecoilRoot>
       <React.StrictMode>
-        <App />
+        <div className="h-screen">
+          <App />
+        </div>
       </React.StrictMode>
     </RecoilRoot>
   </ApolloProvider>,
