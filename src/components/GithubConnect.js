@@ -4,9 +4,9 @@ import exclamation from "../exclamation.svg";
 
 const connect_github = () => {
   window.open(
-    `https://gateway.hyperlog.io/connect_github?token=${localStorage.getItem(
-      "token"
-    )}`
+    `${
+      process.env.REACT_APP_BACKEND_URL
+    }/connect_github?token=${localStorage.getItem("token")}`
   );
 };
 
