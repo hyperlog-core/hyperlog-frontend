@@ -42,6 +42,9 @@ const ProfilePage = () => {
   const history = useHistory();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [notificationString, setNotificationString] = useState(
+    "Data updated successfully"
+  );
 
   const [
     updateUser,
@@ -49,6 +52,7 @@ const ProfilePage = () => {
   ] = useMutation(MUTATION_UPDATE_USER_INFO, {
     onCompleted(data) {
       if (data.updateUser.success) {
+        setNotificationString("User info updated successfully");
         setNotification(true);
       }
     },
@@ -60,6 +64,7 @@ const ProfilePage = () => {
   ] = useMutation(MUTATION_UPDATE_USER_PASSWORD, {
     onCompleted(data) {
       if (data.updatePassword.success) {
+        setNotificationString("Password updated successfully!");
         setNotification(true);
       }
     },
@@ -120,7 +125,13 @@ const ProfilePage = () => {
 
   return (
     <UserLayout header={`Profile`}>
-      <Notification show={notification} toggle={setNotification} />
+      <Portal>
+        <Notification
+          show={notification}
+          toggle={setNotification}
+          primaryText={notificationString}
+        />
+      </Portal>
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
