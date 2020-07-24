@@ -250,7 +250,7 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
         </div>
       ) : null}
       <ul className="rounded-md text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-        {
+        {repos &&
           // eslint-disable-next-line array-callback-return
           Object.keys(repos).map((repo, i) => {
             if (!editMode && selectedPositions.includes(i)) {
@@ -276,8 +276,7 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
                 />
               );
             }
-          })
-        }
+          })}
       </ul>
     </div>
   );

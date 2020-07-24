@@ -36,7 +36,7 @@ const Logout = () => {
   return (
     <div className="flex h-screen">
       <div className="m-auto">
-        <MoonLoader size="60" />
+        <MoonLoader size="60px" />
       </div>
     </div>
   );

@@ -230,7 +230,7 @@ const LoginPage = () => {
                       className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray active:bg-gray-700 transition duration-150 ease-in-out"
                     >
                       {mutationLoading ? (
-                        <PulseLoader color="#ffffff" size="10" />
+                        <PulseLoader color="#ffffff" size="10px" />
                       ) : (
                         "Sign In"
                       )}
