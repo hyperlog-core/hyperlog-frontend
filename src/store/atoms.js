@@ -20,5 +20,5 @@ export const currentUser = atom({
 
 export const isGithubConnected = atom({
   key: "githubConnection",
-  default: false,
+  default: true,
 });
