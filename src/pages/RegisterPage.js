@@ -31,10 +31,50 @@ const RegisterPage = () => {
     }
   `;
 
+  const MUTATION_VALIDATE_EMAIL = gql`
+    mutation($email: String!) {
+      isEmailValid(email: $email) {
+        success
+        errors
+      }
+    }
+  `;
+
+  const MUTATION_VALIDATE_USERNAME = gql`
+    mutation($username: String!) {
+      isUsernameValid(username: $username) {
+        success
+        errors
+      }
+    }
+  `;
+
   const [
     registerUser,
     { loading: mutationLoading, error: mutationError, data: mutationData },
   ] = useMutation(MUTATION_USER_REGISTRATION, {
+    onError: (err) => console.log(err),
+  });
+
+  const [
+    validateEmail,
+    {
+      loading: emailValidationLoading,
+      error: emailValidationError,
+      data: emailValidationData,
+    },
+  ] = useMutation(MUTATION_VALIDATE_EMAIL, {
+    onError: (err) => console.log(err),
+  });
+
+  const [
+    validateUsername,
+    {
+      loading: usernameValidationLoading,
+      error: usernameValidationError,
+      data: usernameValidationData,
+    },
+  ] = useMutation(MUTATION_VALIDATE_USERNAME, {
     onError: (err) => console.log(err),
   });
 
@@ -197,15 +237,24 @@ const RegisterPage = () => {
                   type="email"
                   required
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  onBlur={(e) => {
+                    formik.handleBlur(e);
+                    validateEmail({
+                      variables: { email: e.currentTarget.value },
+                    }).then((res) => {
+                      console.log(JSON.stringify(res, null, 2));
+                    });
+                  }}
                   value={formik.values.email}
                   className={
-                    formik.touched.email && formik.errors.email
+                    emailValidationData &&
+                    !emailValidationData.isEmailValid.success
                       ? ERROR_INPUT_CLASS
                       : NORMAL_INPUT_CLASS
                   }
                 />
-                {formik.touched.email && formik.errors.email ? (
+                {emailValidationData &&
+                !emailValidationData.isEmailValid.success ? (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-red-500"
@@ -221,9 +270,10 @@ const RegisterPage = () => {
                   </div>
                 ) : null}
               </div>
-              {formik.touched.email && formik.errors.email ? (
+              {emailValidationData &&
+              !emailValidationData.isEmailValid.success ? (
                 <p className="mt-2 text-sm text-red-600" id="email-error">
-                  {formik.errors.email}
+                  {emailValidationData.isEmailValid.errors}
                 </p>
               ) : null}
             </div>
@@ -314,15 +364,22 @@ const RegisterPage = () => {
                   type="text"
                   required
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  onBlur={(e) => {
+                    formik.handleBlur(e);
+                    validateUsername({
+                      variables: { username: e.currentTarget.value },
+                    });
+                  }}
                   value={formik.values.username}
                   className={
-                    formik.touched.username && formik.errors.username
+                    usernameValidationData &&
+                    !usernameValidationData.isUsernameValid.success
                       ? ERROR_INPUT_CLASS
                       : NORMAL_INPUT_CLASS
                   }
                 />
-                {formik.touched.username && formik.errors.username ? (
+                {usernameValidationData &&
+                !usernameValidationData.isUsernameValid.success ? (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-red-500"
@@ -338,9 +395,10 @@ const RegisterPage = () => {
                   </div>
                 ) : null}
               </div>
-              {formik.touched.username && formik.errors.username ? (
+              {usernameValidationData &&
+              !usernameValidationData.isUsernameValid.success ? (
                 <p className="mt-2 text-sm text-red-600" id="username-error">
-                  {formik.errors.username}
+                  {usernameValidationData.isUsernameValid.errors}
                 </p>
               ) : null}
             </div>
