@@ -90,12 +90,21 @@ const RegisterPage = () => {
       email: "",
       username: "",
       password: "",
+      confirmPassword: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string().max(20).required("Required"),
       lastName: Yup.string().max(20).required("Required"),
       username: Yup.string().max(15).required("Required"),
       password: Yup.string().required("Required"),
+      confirmPassword: Yup.string()
+        .required("Required")
+        .when("password", {
+          is: (val) => val && val.length > 0,
+          then: Yup.string()
+            .oneOf([Yup.ref("password")], "Both passwords need to be the same")
+            .required("Required"),
+        }),
       email: Yup.string().email("Invalid Email Provided").required("Required"),
     }),
     onSubmit: (values) => {
@@ -241,8 +250,6 @@ const RegisterPage = () => {
                     formik.handleBlur(e);
                     validateEmail({
                       variables: { email: e.currentTarget.value },
-                    }).then((res) => {
-                      console.log(JSON.stringify(res, null, 2));
                     });
                   }}
                   value={formik.values.email}
@@ -373,8 +380,6 @@ const RegisterPage = () => {
                     formik.handleBlur(e);
                     validateUsername({
                       variables: { username: e.currentTarget.value },
-                    }).then((res) => {
-                      console.log(JSON.stringify(res, null, 2));
                     });
                   }}
                   value={formik.values.username}
@@ -455,6 +460,53 @@ const RegisterPage = () => {
               {formik.touched.password && formik.errors.password ? (
                 <p className="mt-2 text-sm text-red-600" id="password-error">
                   {formik.errors.password}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="mt-6">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium leading-5 text-gray-700"
+              >
+                Confirm Password
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.confirmPassword}
+                  className={
+                    formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword
+                      ? ERROR_INPUT_CLASS
+                      : NORMAL_INPUT_CLASS
+                  }
+                />
+                {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword ? (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-red-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                ) : null}
+              </div>
+              {formik.touched.confirmPassword &&
+              formik.errors.confirmPassword ? (
+                <p className="mt-2 text-sm text-red-600" id="password-error">
+                  {formik.errors.confirmPassword}
                 </p>
               ) : null}
             </div>
