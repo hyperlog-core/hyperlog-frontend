@@ -247,14 +247,16 @@ const RegisterPage = () => {
                   }}
                   value={formik.values.email}
                   className={
-                    emailValidationData &&
-                    !emailValidationData.isEmailValid.success
+                    (formik.touched.email && formik.errors.email) ||
+                    (emailValidationData &&
+                      !emailValidationData.isEmailValid.success)
                       ? ERROR_INPUT_CLASS
                       : NORMAL_INPUT_CLASS
                   }
                 />
-                {emailValidationData &&
-                !emailValidationData.isEmailValid.success ? (
+                {(formik.touched.email && formik.errors.email) ||
+                (emailValidationData &&
+                  !emailValidationData.isEmailValid.success) ? (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-red-500"
@@ -270,10 +272,13 @@ const RegisterPage = () => {
                   </div>
                 ) : null}
               </div>
-              {emailValidationData &&
-              !emailValidationData.isEmailValid.success ? (
+              {(formik.touched.email && formik.errors.email) ||
+              (emailValidationData &&
+                !emailValidationData.isEmailValid.success) ? (
                 <p className="mt-2 text-sm text-red-600" id="email-error">
-                  {emailValidationData.isEmailValid.errors}
+                  {formik.touched.email && formik.errors.email
+                    ? formik.errors.email
+                    : emailValidationData.isEmailValid.errors}
                 </p>
               ) : null}
             </div>
@@ -368,18 +373,22 @@ const RegisterPage = () => {
                     formik.handleBlur(e);
                     validateUsername({
                       variables: { username: e.currentTarget.value },
+                    }).then((res) => {
+                      console.log(JSON.stringify(res, null, 2));
                     });
                   }}
                   value={formik.values.username}
                   className={
-                    usernameValidationData &&
-                    !usernameValidationData.isUsernameValid.success
+                    (formik.touched.username && formik.errors.username) ||
+                    (usernameValidationData &&
+                      !usernameValidationData.isUsernameValid.success)
                       ? ERROR_INPUT_CLASS
                       : NORMAL_INPUT_CLASS
                   }
                 />
-                {usernameValidationData &&
-                !usernameValidationData.isUsernameValid.success ? (
+                {(formik.touched.username && formik.errors.username) ||
+                (usernameValidationData &&
+                  !usernameValidationData.isUsernameValid.success) ? (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-red-500"
@@ -395,10 +404,13 @@ const RegisterPage = () => {
                   </div>
                 ) : null}
               </div>
-              {usernameValidationData &&
-              !usernameValidationData.isUsernameValid.success ? (
+              {(formik.touched.username && formik.errors.username) ||
+              (usernameValidationData &&
+                !usernameValidationData.isUsernameValid.success) ? (
                 <p className="mt-2 text-sm text-red-600" id="username-error">
-                  {usernameValidationData.isUsernameValid.errors}
+                  {formik.touched.username && formik.errors.username
+                    ? formik.errors.username
+                    : usernameValidationData.isUsernameValid.errors}
                 </p>
               ) : null}
             </div>
