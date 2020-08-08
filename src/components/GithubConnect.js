@@ -35,29 +35,37 @@ class GithubConnect extends React.Component {
   render() {
     const modal = this.state.showModal ? (
       <Portal>
-        <div className="modal-container" onClick={this.handleHide}>
-          <div className="github-modal">
+        <div
+          className="modal fixed bg-black bg-opacity-50 w-full h-full top-0 left-0 flex items-center justify-center"
+          onClick={this.handleHide}
+        >
+          <div className="w-3/12 rounded-lg overflow-hidden shadow-lg bg-white">
             <p>
               <button
-                className="modal-option"
+                className="w-full height-auto hover:bg-purple-800"
                 onClick={() => connect_github("public")}
               >
                 <strong>Only public repositories</strong>
-                <p>
-                  Allow access to only public repositories you've contributed to
-                </p>
+                <span className="text-sm">
+                  <p>
+                    Allow access to only public repositories you've contributed
+                    to
+                  </p>
+                </span>
               </button>
             </p>
             <p>
               <button
-                className="modal-option"
+                className="w-full height-auto hover:bg-purple-800"
                 onClick={() => connect_github("full")}
               >
                 <strong>All repositories</strong>
-                <p>
-                  Allow access to both public and private repositories you've
-                  contributed to
-                </p>
+                <span className="text-sm">
+                  <p>
+                    Allow access to both public and private repositories you've
+                    contributed to
+                  </p>
+                </span>
               </button>
             </p>
           </div>
