@@ -187,421 +187,13 @@ const RegisterPage = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {mutationError ? (
-            <div className="rounded-md bg-red-50 p-4 mb-6">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-red-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm leading-5 font-medium text-red-800">
-                    Invalid Credentials Provided
-                  </h3>
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          {mutationData && mutationData.register.errors ? (
-            <div className="rounded-md bg-red-50 p-4 mb-6">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-red-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm leading-5 font-medium text-red-800">
-                    There were {mutationData.register.errors.length} errors with
-                    your submission
-                  </h3>
-                  <div className="mt-2 text-sm leading-5 text-red-700">
-                    <ul className="list-disc pl-5">
-                      {mutationData.register.errors.forEach((err) => (
-                        <li className="mt-1">{err}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          <form onSubmit={formik.handleSubmit}>
+          <div>
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Email address
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  onChange={formik.handleChange}
-                  onBlur={(e) => {
-                    formik.handleBlur(e);
-                    validateEmail({
-                      variables: { email: e.currentTarget.value },
-                    });
-                  }}
-                  value={formik.values.email}
-                  className={
-                    (formik.touched.email && formik.errors.email) ||
-                    (emailValidationData &&
-                      !emailValidationData.isEmailValid.success)
-                      ? ERROR_INPUT_CLASS
-                      : NORMAL_INPUT_CLASS
-                  }
-                />
-                {emailValidationLoading && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <PulseLoader size="10px" />
-                  </div>
-                )}
-                {emailValidationData &&
-                  emailValidationData.isEmailValid.success && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="h-5 w-5 text-green-500"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                  )}
-                {(formik.touched.email && formik.errors.email) ||
-                (emailValidationData &&
-                  !emailValidationData.isEmailValid.success) ? (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                ) : null}
-              </div>
-              {(formik.touched.email && formik.errors.email) ||
-              (emailValidationData &&
-                (!emailValidationData.isEmailValid.success ||
-                  emailValidationError)) ? (
-                <p className="mt-2 text-sm text-red-600" id="email-error">
-                  {formik.touched.email && formik.errors.email
-                    ? formik.errors.email
-                    : emailValidationData.isEmailValid.errors}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="mt-6">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Name
-              </label>
-              <div className="mt-1 rounded-md shadow-sm flex">
-                <div className="w-1/2 relative flex-1 min-w-0">
-                  <input
-                    placeholder="First Name"
-                    id="firstName"
-                    name="firstName"
-                    value={formik.values.firstName}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    aria-label="First Name"
-                    className={
-                      formik.touched.firstName && formik.errors.firstName
-                        ? "appearance-none relative px-3 py-2 block w-full rounded-none rounded-bl-md rounded-tl-md border border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:border-red-300 focus:shadow-outline-red transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                        : "appearance-none relative px-3 py-2 block w-full rounded-none rounded-bl-md rounded-tl-md border border-gray-300 placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                    }
-                  />
-                  {formik.touched.firstName && formik.errors.firstName ? (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg
-                        className="h-5 w-5 text-red-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  ) : null}
-                </div>
-                <div className="-ml-px relative flex-1 min-w-0">
-                  <input
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Last Name"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.lastName}
-                    aria-label="Last Name"
-                    className={
-                      formik.touched.firstName && formik.errors.firstName
-                        ? "appearance-none relative px-3 py-2 block w-full rounded-none rounded-br-md rounded-tr-md border border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:border-red-300 focus:shadow-outline-red transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                        : "appearance-none relative px-3 py-2 block w-full rounded-none rounded-br-md rounded-tr-md border border-gray-300 placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                    }
-                  />
-                  {formik.touched.lastName && formik.errors.lastName ? (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg
-                        className="h-5 w-5 text-red-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Username
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <input
-                  id="username"
-                  type="text"
-                  required
-                  onChange={formik.handleChange}
-                  onBlur={(e) => {
-                    formik.handleBlur(e);
-                    validateUsername({
-                      variables: { username: e.currentTarget.value },
-                    });
-                  }}
-                  value={formik.values.username}
-                  className={
-                    (formik.touched.username && formik.errors.username) ||
-                    (usernameValidationData &&
-                      !usernameValidationData.isUsernameValid.success)
-                      ? ERROR_INPUT_CLASS
-                      : NORMAL_INPUT_CLASS
-                  }
-                />
-                {usernameValidationLoading && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <PulseLoader size="10px" />
-                  </div>
-                )}
-                {usernameValidationData &&
-                  usernameValidationData.isUsernameValid.success && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="h-5 w-5 text-green-500"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                  )}
-                {(formik.touched.username && formik.errors.username) ||
-                (usernameValidationData &&
-                  (!usernameValidationData.isUsernameValid.success ||
-                    usernameValidationError)) ? (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                ) : null}
-              </div>
-              {(formik.touched.username && formik.errors.username) ||
-              (usernameValidationData &&
-                !usernameValidationData.isUsernameValid.success) ? (
-                <p className="mt-2 text-sm text-red-600" id="username-error">
-                  {formik.touched.username && formik.errors.username
-                    ? formik.errors.username
-                    : usernameValidationData.isUsernameValid.errors}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="mt-6">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Password
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                  className={
-                    formik.touched.password && formik.errors.password
-                      ? ERROR_INPUT_CLASS
-                      : NORMAL_INPUT_CLASS
-                  }
-                />
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                ) : null}
-              </div>
-              {formik.touched.password && formik.errors.password ? (
-                <p className="mt-2 text-sm text-red-600" id="password-error">
-                  {formik.errors.password}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="mt-6">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Confirm Password
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  required
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.confirmPassword}
-                  className={
-                    formik.touched.confirmPassword &&
-                    formik.errors.confirmPassword
-                      ? ERROR_INPUT_CLASS
-                      : NORMAL_INPUT_CLASS
-                  }
-                />
-                {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword ? (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                ) : null}
-              </div>
-              {formik.touched.confirmPassword &&
-              formik.errors.confirmPassword ? (
-                <p className="mt-2 text-sm text-red-600" id="password-error">
-                  {formik.errors.confirmPassword}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="mt-6">
-              <span className="block w-full rounded-md shadow-sm">
-                <button
-                  type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray active:bg-gray-700 transition duration-150 ease-in-out"
-                >
-                  {mutationLoading ? (
-                    <PulseLoader size="10px" color="#ffffff" />
-                  ) : (
-                    "Register"
-                  )}
-                </button>
-              </span>
-            </div>
-          </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm leading-5">
-                <span className="px-2 bg-white text-gray-500">
-                  Already have an Account?
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <span className="block w-full rounded-md shadow-sm">
+              <span class="w-full inline-flex rounded-md shadow-sm">
                 <GitHubLogin
                   clientId="42782b0ad960d7bae699"
                   redirectUri=""
-                  className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-50 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-200 transition ease-in-out duration-150"
+                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition duration-150 ease-in-out"
                   onSuccess={(data) =>
                     loginWithGithub({ variables: { code: data["code"] } })
                   }
@@ -628,6 +220,428 @@ const RegisterPage = () => {
                   }
                 />
               </span>
+            </div>
+
+            <div class="mt-6 relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+              </div>
+              <div class="relative flex justify-center text-sm leading-5">
+                <span class="px-2 bg-white text-gray-500">
+                  Or do manual labor
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6">
+            {mutationError ? (
+              <div className="rounded-md bg-red-50 p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="h-5 w-5 text-red-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm leading-5 font-medium text-red-800">
+                      Invalid Credentials Provided
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {mutationData && mutationData.register.errors ? (
+              <div className="rounded-md bg-red-50 p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="h-5 w-5 text-red-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm leading-5 font-medium text-red-800">
+                      There were {mutationData.register.errors.length} errors
+                      with your submission
+                    </h3>
+                    <div className="mt-2 text-sm leading-5 text-red-700">
+                      <ul className="list-disc pl-5">
+                        {mutationData.register.errors.forEach((err) => (
+                          <li className="mt-1">{err}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            <form onSubmit={formik.handleSubmit}>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium leading-5 text-gray-700"
+                >
+                  Email address
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    onChange={formik.handleChange}
+                    onBlur={(e) => {
+                      formik.handleBlur(e);
+                      validateEmail({
+                        variables: { email: e.currentTarget.value },
+                      });
+                    }}
+                    value={formik.values.email}
+                    className={
+                      (formik.touched.email && formik.errors.email) ||
+                      (emailValidationData &&
+                        !emailValidationData.isEmailValid.success)
+                        ? ERROR_INPUT_CLASS
+                        : NORMAL_INPUT_CLASS
+                    }
+                  />
+                  {emailValidationLoading && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <PulseLoader size="10px" />
+                    </div>
+                  )}
+                  {emailValidationData &&
+                    emailValidationData.isEmailValid.success && (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="h-5 w-5 text-green-500"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    )}
+                  {(formik.touched.email && formik.errors.email) ||
+                  (emailValidationData &&
+                    !emailValidationData.isEmailValid.success) ? (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  ) : null}
+                </div>
+                {(formik.touched.email && formik.errors.email) ||
+                (emailValidationData &&
+                  (!emailValidationData.isEmailValid.success ||
+                    emailValidationError)) ? (
+                  <p className="mt-2 text-sm text-red-600" id="email-error">
+                    {formik.touched.email && formik.errors.email
+                      ? formik.errors.email
+                      : emailValidationData.isEmailValid.errors}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="mt-6">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-5 text-gray-700"
+                >
+                  Name
+                </label>
+                <div className="mt-1 rounded-md shadow-sm flex">
+                  <div className="w-1/2 relative flex-1 min-w-0">
+                    <input
+                      placeholder="First Name"
+                      id="firstName"
+                      name="firstName"
+                      value={formik.values.firstName}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      aria-label="First Name"
+                      className={
+                        formik.touched.firstName && formik.errors.firstName
+                          ? "appearance-none relative px-3 py-2 block w-full rounded-none rounded-bl-md rounded-tl-md border border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:border-red-300 focus:shadow-outline-red transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          : "appearance-none relative px-3 py-2 block w-full rounded-none rounded-bl-md rounded-tl-md border border-gray-300 placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      }
+                    />
+                    {formik.touched.firstName && formik.errors.firstName ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg
+                          className="h-5 w-5 text-red-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="-ml-px relative flex-1 min-w-0">
+                    <input
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Last Name"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.lastName}
+                      aria-label="Last Name"
+                      className={
+                        formik.touched.firstName && formik.errors.firstName
+                          ? "appearance-none relative px-3 py-2 block w-full rounded-none rounded-br-md rounded-tr-md border border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:border-red-300 focus:shadow-outline-red transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          : "appearance-none relative px-3 py-2 block w-full rounded-none rounded-br-md rounded-tr-md border border-gray-300 placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      }
+                    />
+                    {formik.touched.lastName && formik.errors.lastName ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg
+                          className="h-5 w-5 text-red-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium leading-5 text-gray-700"
+                >
+                  Username
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <input
+                    id="username"
+                    type="text"
+                    required
+                    onChange={formik.handleChange}
+                    onBlur={(e) => {
+                      formik.handleBlur(e);
+                      validateUsername({
+                        variables: { username: e.currentTarget.value },
+                      });
+                    }}
+                    value={formik.values.username}
+                    className={
+                      (formik.touched.username && formik.errors.username) ||
+                      (usernameValidationData &&
+                        !usernameValidationData.isUsernameValid.success)
+                        ? ERROR_INPUT_CLASS
+                        : NORMAL_INPUT_CLASS
+                    }
+                  />
+                  {usernameValidationLoading && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <PulseLoader size="10px" />
+                    </div>
+                  )}
+                  {usernameValidationData &&
+                    usernameValidationData.isUsernameValid.success && (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="h-5 w-5 text-green-500"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    )}
+                  {(formik.touched.username && formik.errors.username) ||
+                  (usernameValidationData &&
+                    (!usernameValidationData.isUsernameValid.success ||
+                      usernameValidationError)) ? (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  ) : null}
+                </div>
+                {(formik.touched.username && formik.errors.username) ||
+                (usernameValidationData &&
+                  !usernameValidationData.isUsernameValid.success) ? (
+                  <p className="mt-2 text-sm text-red-600" id="username-error">
+                    {formik.touched.username && formik.errors.username
+                      ? formik.errors.username
+                      : usernameValidationData.isUsernameValid.errors}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="mt-6">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-5 text-gray-700"
+                >
+                  Password
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <input
+                    id="password"
+                    type="password"
+                    required
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    className={
+                      formik.touched.password && formik.errors.password
+                        ? ERROR_INPUT_CLASS
+                        : NORMAL_INPUT_CLASS
+                    }
+                  />
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  ) : null}
+                </div>
+                {formik.touched.password && formik.errors.password ? (
+                  <p className="mt-2 text-sm text-red-600" id="password-error">
+                    {formik.errors.password}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="mt-6">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium leading-5 text-gray-700"
+                >
+                  Confirm Password
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    required
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.confirmPassword}
+                    className={
+                      formik.touched.confirmPassword &&
+                      formik.errors.confirmPassword
+                        ? ERROR_INPUT_CLASS
+                        : NORMAL_INPUT_CLASS
+                    }
+                  />
+                  {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword ? (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  ) : null}
+                </div>
+                {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword ? (
+                  <p className="mt-2 text-sm text-red-600" id="password-error">
+                    {formik.errors.confirmPassword}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="mt-6">
+                <span className="block w-full rounded-md shadow-sm">
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray active:bg-gray-700 transition duration-150 ease-in-out"
+                  >
+                    {mutationLoading ? (
+                      <PulseLoader size="10px" color="#ffffff" />
+                    ) : (
+                      "Register"
+                    )}
+                  </button>
+                </span>
+              </div>
+            </form>
+          </div>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm leading-5">
+                <span className="px-2 bg-white text-gray-500">
+                  Already have an Account?
+                </span>
+              </div>
             </div>
 
             <div className="mt-6">
