@@ -60,28 +60,63 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                 >
                   {repo.full_name}
                 </div>
-                {repo.description ? (
-                  <div
-                    className={`mt-2 flex items-center text-sm leading-5 ${
-                      isSelected && isEditing
-                        ? "text-gray-800 font-medium"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    <svg
-                      className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                    <span className="truncate">{repo.description}</span>
-                  </div>
-                ) : null}
+                <div
+                  className={`mt-2 flex items-center text-sm leading-5 ${
+                    isSelected && isEditing
+                      ? "text-gray-800 font-medium"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {repo.isPrivate && (
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-orange-100 text-orange-800">
+                      <svg
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        class="-ml-0.5 mr-1.5 h-3 w-3 text-orange-400"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                      Private Repo
+                    </span>
+                  )}
+                  &nbsp;
+                  {repo.description && (
+                    <>
+                      {isSelected && isEditing ? (
+                        <svg
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      ) : (
+                        <svg
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                          ></path>
+                        </svg>
+                      )}
+                    </>
+                  )}
+                  <span className="truncate">{repo.description}</span>
+                </div>
               </div>
               <div className="hidden md:block">
                 <div>
@@ -141,6 +176,8 @@ const MUTATION_SELECT_REPOS = gql`
 const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
+
+  console.log(repos);
 
   var selectedIndexes = [];
 
