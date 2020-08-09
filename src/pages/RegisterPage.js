@@ -228,7 +228,7 @@ const RegisterPage = () => {
               </div>
               <div class="relative flex justify-center text-sm leading-5">
                 <span class="px-2 bg-white text-gray-500">
-                  Or do manual labor
+                  Or do manual labour
                 </span>
               </div>
             </div>
