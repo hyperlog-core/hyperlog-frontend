@@ -261,6 +261,27 @@ const RegisterPage = () => {
                       : NORMAL_INPUT_CLASS
                   }
                 />
+                {emailValidationLoading && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <PulseLoader size="10" />
+                  </div>
+                )}
+                {emailValidationData &&
+                  emailValidationData.isEmailValid.success && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="h-5 w-5 text-green-500"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                  )}
                 {(formik.touched.email && formik.errors.email) ||
                 (emailValidationData &&
                   !emailValidationData.isEmailValid.success) ? (
@@ -281,7 +302,8 @@ const RegisterPage = () => {
               </div>
               {(formik.touched.email && formik.errors.email) ||
               (emailValidationData &&
-                !emailValidationData.isEmailValid.success) ? (
+                (!emailValidationData.isEmailValid.success ||
+                  emailValidationError)) ? (
                 <p className="mt-2 text-sm text-red-600" id="email-error">
                   {formik.touched.email && formik.errors.email
                     ? formik.errors.email
@@ -391,9 +413,31 @@ const RegisterPage = () => {
                       : NORMAL_INPUT_CLASS
                   }
                 />
+                {usernameValidationLoading && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <PulseLoader size="10" />
+                  </div>
+                )}
+                {usernameValidationData &&
+                  usernameValidationData.isUsernameValid.success && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="h-5 w-5 text-green-500"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                  )}
                 {(formik.touched.username && formik.errors.username) ||
                 (usernameValidationData &&
-                  !usernameValidationData.isUsernameValid.success) ? (
+                  (!usernameValidationData.isUsernameValid.success ||
+                    usernameValidationError)) ? (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg
                       className="h-5 w-5 text-red-500"
