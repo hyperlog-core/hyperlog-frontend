@@ -6,6 +6,9 @@ import * as Yup from "yup";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
 import PulseLoader from "react-spinners/PulseLoader";
+import { loginUser } from "../utils/auth";
+import { useSetRecoilState } from "recoil";
+import { currentUser } from "../store/atoms";
 
 const RegisterPage = () => {
   let history = useHistory();
@@ -27,6 +30,15 @@ const RegisterPage = () => {
       ) {
         success
         errors
+        login {
+          token
+          user {
+            id
+            email
+            firstName
+            lastName
+          }
+        }
       }
     }
   `;
@@ -49,10 +61,20 @@ const RegisterPage = () => {
     }
   `;
 
+  const setUser = useSetRecoilState(currentUser);
+
   const [
     registerUser,
     { loading: mutationLoading, error: mutationError, data: mutationData },
   ] = useMutation(MUTATION_USER_REGISTRATION, {
+    onCompleted: (data) => {
+      loginUser(data.register.login.token, false);
+      setUser({
+        loggedIn: true,
+        user: data.register.login.user,
+      });
+      history.push("/dashboard");
+    },
     onError: (err) => console.log(err),
   });
 
@@ -116,9 +138,6 @@ const RegisterPage = () => {
           password: values.password,
           username: values.username,
         },
-      }).then((res) => {
-        if (res.data.register.success)
-          setTimeout(() => history.push("/login"), 4000);
       });
     },
   });
@@ -192,46 +211,6 @@ const RegisterPage = () => {
             </div>
           ) : null}
 
-          {mutationData && mutationData.register.success ? (
-            <div className="rounded-md bg-green-50 p-4 mb-6">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-green-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm leading-5 font-medium text-green-800">
-                    Registered Successfully!
-                  </h3>
-                  <div className="mt-2 text-sm leading-5 text-green-700">
-                    <p>
-                      You have been registered successfully! You will be
-                      redirected to login in a few seconds.
-                    </p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="-mx-2 -my-1.5 flex">
-                      <Link
-                        to="/login"
-                        className="px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 transition ease-in-out duration-150"
-                      >
-                        Take me there now
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : null}
           <form onSubmit={formik.handleSubmit}>
             <div>
               <label
@@ -263,7 +242,7 @@ const RegisterPage = () => {
                 />
                 {emailValidationLoading && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <PulseLoader size="10" />
+                    <PulseLoader size="10px" />
                   </div>
                 )}
                 {emailValidationData &&
@@ -415,7 +394,7 @@ const RegisterPage = () => {
                 />
                 {usernameValidationLoading && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <PulseLoader size="10" />
+                    <PulseLoader size="10px" />
                   </div>
                 )}
                 {usernameValidationData &&
