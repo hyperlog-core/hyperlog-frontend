@@ -1,30 +1,21 @@
 import React from "react";
 import UserLayout from "../layout/UserLayout";
 import GithubConnect from "../components/GithubConnect";
-import { useRecoilValue } from "recoil";
-import { isGithubConnected } from "../store/atoms";
 import ProfileInfo from "../components/ProfileInfo";
-import PulseLoader from "react-spinners/PulseLoader";
 
 const DashboardPage = () => {
-  const githubConnection = useRecoilValue(isGithubConnected);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!githubConnection) {
+  if (user.profiles.length === 0) {
     return (
       <UserLayout header={`One more step...`}>
         <GithubConnect />
       </UserLayout>
     );
-  } else if (githubConnection) {
+  } else {
     return (
       <UserLayout header={`Dashboard`}>
         <ProfileInfo />
-      </UserLayout>
-    );
-  } else {
-    return (
-      <UserLayout header={`Loading...`}>
-        <PulseLoader size="60px" color="#000000" />
       </UserLayout>
     );
   }

@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === "production") {
 
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql/`,
-  cache: new InMemoryCache({}),
+  cache: new InMemoryCache(),
   request: (operation) => {
     const token = localStorage.getItem("token");
     operation.setContext({
@@ -33,6 +33,7 @@ if (
   localStorage.getItem("expire") < Date.now()
 ) {
   localStorage.removeItem("expire");
+  localStorage.removeItem("user");
   localStorage.removeItem("token");
 }
 
