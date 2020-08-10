@@ -36,6 +36,9 @@ const RegisterPage = () => {
             email
             firstName
             lastName
+            profiles {
+              id
+            }
           }
         }
       }
@@ -67,7 +70,7 @@ const RegisterPage = () => {
     { loading: mutationLoading, error: mutationError, data: mutationData },
   ] = useMutation(MUTATION_USER_REGISTRATION, {
     onCompleted: (data) => {
-      loginUser(data.register.login.token, false);
+      loginUser(data.register.login.token, data.register.login.user, false);
       setUser({
         loggedIn: true,
         user: data.register.login.user,

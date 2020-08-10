@@ -19,6 +19,9 @@ const LoginPage = () => {
           email
           firstName
           lastName
+          profiles {
+            id
+          }
         }
       }
     }
@@ -33,7 +36,7 @@ const LoginPage = () => {
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(MUTATION_LOGIN_USER, {
     onCompleted: (data) => {
-      loginUser(data.login.token, formik.values.remember);
+      loginUser(data.login.token, data.login.user, formik.values.remember);
       setUser({
         loggedIn: true,
         user: data.login.user,
