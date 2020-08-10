@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { gql, useQuery } from "@apollo/client";
 import Portal from "../Portal";
 import github from "../github-logo.svg";
 import exclamation from "../exclamation.svg";
 import Transition from "../helpers/Transition";
-import { refreshUser } from "../utils/auth";
 
 const connect_github = (scope) => {
   window.open(
@@ -15,20 +13,6 @@ const connect_github = (scope) => {
     )}&repos_scope=${scope}`
   );
 };
-
-const GET_USER_POLL = gql`
-  query {
-    thisUser {
-      id
-      firstName
-      lastName
-      email
-      profiles {
-        id
-      }
-    }
-  }
-`;
 
 const ScopeSelection = ({ isOpen, setIsOpen }) => {
   return (
@@ -137,18 +121,6 @@ const ScopeSelection = ({ isOpen, setIsOpen }) => {
 };
 
 const GithubConnect = () => {
-  const { loading, data } = useQuery(GET_USER_POLL, {
-    pollInterval: 1000,
-  });
-
-  if (
-    !loading &&
-    JSON.parse(localStorage.getItem("user")).profiles.length !==
-      data.thisUser.profiles.length
-  ) {
-    refreshUser(data.thisUser);
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
