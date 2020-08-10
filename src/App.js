@@ -14,8 +14,7 @@ import Logout from "./helpers/Logout";
 import NavBar from "./components/NavBar";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUser, isGithubConnected } from "./store/atoms";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
+import { gql, useQuery } from "@apollo/client";
 
 function App() {
   const [user, setUser] = useRecoilState(currentUser);

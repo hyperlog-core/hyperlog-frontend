@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import logo from "../logo-white.svg";
 import Transition from "../helpers/Transition";
 import { useHistory, useRouteMatch, Link } from "react-router-dom";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
+import { gql, useQuery } from "@apollo/client";
 import md5 from "md5";
 
 const NavBar = () => {

@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import MoonLoader from "react-spinners/MoonLoader";
 import { logoutUser } from "../utils/auth";
-import { useApolloClient, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { currentUser } from "../store/atoms";
 import { useSetRecoilState } from "recoil";
 

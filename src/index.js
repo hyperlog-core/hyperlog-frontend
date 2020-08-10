@@ -4,8 +4,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./tailwind.generated.css";
-import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { RecoilRoot } from "recoil";
 import * as Sentry from "@sentry/react";
 
@@ -18,6 +17,7 @@ if (process.env.NODE_ENV === "production") {
 
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql/`,
+  cache: new InMemoryCache({}),
   request: (operation) => {
     const token = localStorage.getItem("token");
     operation.setContext({
