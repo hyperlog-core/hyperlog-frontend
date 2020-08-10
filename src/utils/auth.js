@@ -23,3 +23,7 @@ export function logoutUser() {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
 }
+
+export function refreshUser(user) {
+  localStorage.setItem("user", JSON.stringify(user));
+}

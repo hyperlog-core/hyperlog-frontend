@@ -4,9 +4,15 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./tailwind.generated.css";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
 import { RecoilRoot } from "recoil";
 import * as Sentry from "@sentry/react";
+import { setContext } from "@apollo/client/link/context";
 
 if (process.env.NODE_ENV === "production") {
   Sentry.init({
@@ -15,17 +21,23 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql/`,
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("token");
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `JWT ${token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
-  request: (operation) => {
-    const token = localStorage.getItem("token");
-    operation.setContext({
-      headers: {
-        authorization: token ? `JWT ${token}` : "",
-      },
-    });
-  },
 });
 
 if (
