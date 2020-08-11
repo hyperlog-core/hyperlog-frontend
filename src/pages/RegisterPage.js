@@ -67,14 +67,12 @@ const RegisterPage = () => {
       loginWithGithub(code: $code) {
         success
         errors
-        login {
-          token
-          user {
-            id
-            email
-            firstName
-            lastName
-          }
+        token
+        user {
+          id
+          email
+          firstName
+          lastName
         }
       }
     }
@@ -101,10 +99,10 @@ const RegisterPage = () => {
     MUTATION_LOGIN_GITHUB,
     {
       onCompleted: (data) => {
-        loginUser(data.loginWithGithub.login.token, false);
+        loginUser(data.loginWithGithub.token, false);
         setUser({
           loggedIn: true,
-          user: data.loginWithGithub.login.user,
+          user: data.loginWithGithub.user,
         });
         history.push("/dashboard");
       },
