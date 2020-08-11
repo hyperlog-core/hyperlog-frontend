@@ -6,7 +6,7 @@ export function isUserAuthenticated() {
   }
 }
 
-export function loginUser(token, remember) {
+export function loginUser(token, user, remember) {
   let currentTime;
   if (remember) {
     currentTime = Date.now() + 864000000;
@@ -14,10 +14,16 @@ export function loginUser(token, remember) {
     currentTime = Date.now() + 86400000;
   }
   localStorage.setItem("expire", currentTime);
+  localStorage.setItem("user", JSON.stringify(user));
   localStorage.setItem("token", token);
 }
 
 export function logoutUser() {
   localStorage.removeItem("expire");
+  localStorage.removeItem("user");
   localStorage.removeItem("token");
+}
+
+export function refreshUser(user) {
+  localStorage.setItem("user", JSON.stringify(user));
 }

@@ -6,8 +6,6 @@ import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
 import PulseLoader from "react-spinners/PulseLoader";
 import { loginUser } from "../utils/auth";
-import { useSetRecoilState } from "recoil";
-import { currentUser } from "../store/atoms";
 
 const RegisterPage = () => {
   let history = useHistory();
@@ -36,6 +34,9 @@ const RegisterPage = () => {
             email
             firstName
             lastName
+            profiles {
+              id
+            }
           }
         }
       }
@@ -60,18 +61,12 @@ const RegisterPage = () => {
     }
   `;
 
-  const setUser = useSetRecoilState(currentUser);
-
   const [
     registerUser,
     { loading: mutationLoading, error: mutationError, data: mutationData },
   ] = useMutation(MUTATION_USER_REGISTRATION, {
     onCompleted: (data) => {
-      loginUser(data.register.login.token, false);
-      setUser({
-        loggedIn: true,
-        user: data.register.login.user,
-      });
+      loginUser(data.register.login.token, data.register.login.user, false);
       history.push("/dashboard");
     },
     onError: (err) => console.log(err),
