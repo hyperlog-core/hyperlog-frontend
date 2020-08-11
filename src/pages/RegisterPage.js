@@ -96,7 +96,7 @@ const RegisterPage = () => {
     MUTATION_LOGIN_GITHUB,
     {
       onCompleted: (data) => {
-        loginUser(data.loginWithGithub.token, false);
+        loginUser(data.loginWithGithub.token, data.loginWithGithub.user, false);
         history.push("/dashboard");
       },
       onError: (err) => console.log(err),
