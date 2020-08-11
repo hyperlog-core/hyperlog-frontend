@@ -10,7 +10,6 @@ import {
   InMemoryCache,
   createHttpLink,
 } from "@apollo/client";
-import { RecoilRoot } from "recoil";
 import * as Sentry from "@sentry/react";
 import { setContext } from "@apollo/client/link/context";
 
@@ -51,13 +50,11 @@ if (
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <RecoilRoot>
-      <React.StrictMode>
-        <div className="h-screen">
-          <App />
-        </div>
-      </React.StrictMode>
-    </RecoilRoot>
+    <React.StrictMode>
+      <div className="h-screen">
+        <App />
+      </div>
+    </React.StrictMode>
   </ApolloProvider>,
   document.getElementById("root")
 );
