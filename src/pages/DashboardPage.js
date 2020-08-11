@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import UserLayout from "../layout/UserLayout";
 import GithubConnect from "../components/GithubConnect";
@@ -22,15 +22,16 @@ const GET_USER_POLL = gql`
 const DashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const { loading, data } = useQuery(GET_USER_POLL, {
-    pollInterval: 1000,
-  });
+  const { loading, data, startPolling, stopPolling } = useQuery(GET_USER_POLL);
 
-  if (
-    !loading &&
-    JSON.parse(localStorage.getItem("user")).profiles.length !==
-      data.thisUser.profiles.length
-  ) {
+  useEffect(() => {
+    startPolling(1000);
+    return () => {
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
+
+  if (!loading && JSON.parse(localStorage.getItem("user")) !== data.thisUser) {
     refreshUser(data.thisUser);
   }
 
