@@ -176,8 +176,6 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
 
-  console.log(repos);
-
   var selectedIndexes = [];
 
   if (selected.length > 0) {

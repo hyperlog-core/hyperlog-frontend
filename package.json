@@ -26,6 +26,7 @@
     "react-spinners": "^0.8.3",
     "react-transition-group": "^4.4.1",
     "recoil": "0.0.10",
+    "swr": "^0.3.0",
     "tailwindcss": "^1.4.6",
     "yup": "^0.29.1"
   },

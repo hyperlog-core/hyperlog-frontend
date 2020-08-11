@@ -1,65 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import PulseLoader from "react-spinners/PulseLoader";
 import RepoSelectionPage from "./RepoSelectionPage";
 import UserHomeDash from "./UserHomeDash";
-import { useRecoilValueLoadable } from "recoil";
-import { currentUser } from "../store/atoms";
-
-const fetchUserData = (userID) => {
-  return fetch(`${process.env.REACT_APP_AWS_URL}/user/${userID}`).then((res) =>
-    res.json()
-  );
-};
+import { useUser } from "../utils/apiGateway";
 
 const ProfileInfo = ({ analyse, loading }) => {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [profileInfo, setProfileInfo] = useState({});
-  const [calledOnce, setCalledOnce] = useState(false);
+  const userStored = JSON.parse(localStorage.getItem("user"));
 
-  const user = useRecoilValueLoadable(currentUser);
+  const { user, isLoading, isError } = useUser(userStored.id);
 
-  switch (user.state) {
-    case "hasValue":
-      if (user.contents.user && !isLoaded && !calledOnce) {
-        setCalledOnce(true);
-        fetchUserData(user.contents.user.id).then(
-          (result) => {
-            setProfileInfo(result);
-            setIsLoaded(true);
-          },
-          (error) => {
-            setError(error);
-            setIsLoaded(true);
-          }
-        );
-      }
-      break;
-    case "hasError":
-    default:
-      throw user.contents;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
+  if (isError) {
+    return <div>Error: Something Went Wrong</div>;
+  } else if (isLoading || (user && user.status === 404)) {
     return (
       <div className="flex w-full h-64 justify-center items-center">
         <PulseLoader size="20px" color="#374151" />
       </div>
     );
-  } else if (!profileInfo.selectedRepos) {
+  } else if (!user.data.selectedRepos) {
+    console.log(user.data);
     return (
       <RepoSelectionPage
-        repos={profileInfo.repos}
-        selected={profileInfo.selectedRepos ?? []}
+        repos={user.data.repos}
+        selected={user.data.selectedRepos ?? []}
         editMode={true}
         firstTime={true}
       />
     );
-  } else if (profileInfo.selectedRepos) {
+  } else if (user.data.selectedRepos) {
     return (
-      <UserHomeDash profile={profileInfo} analyse={analyse} loading={loading} />
+      <UserHomeDash profile={user.data} analyse={analyse} loading={loading} />
     );
   } else {
     return (
