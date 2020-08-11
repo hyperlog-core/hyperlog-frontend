@@ -73,6 +73,9 @@ const RegisterPage = () => {
           email
           firstName
           lastName
+          profiles {
+            id
+          }
         }
       }
     }

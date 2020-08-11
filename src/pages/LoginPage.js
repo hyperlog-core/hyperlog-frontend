@@ -37,6 +37,9 @@ const LoginPage = () => {
           email
           firstName
           lastName
+          profiles {
+            id
+          }
         }
       }
     }
