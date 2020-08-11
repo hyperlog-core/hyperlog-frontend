@@ -12,51 +12,18 @@ import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import Logout from "./helpers/Logout";
 import NavBar from "./components/NavBar";
-import { useRecoilState } from "recoil";
-import { currentUser } from "./store/atoms";
-import { gql, useQuery } from "@apollo/client";
+import { isUserAuthenticated } from "./utils/auth";
 
 function App() {
-  const [user, setUser] = useRecoilState(currentUser);
-
-  const GET_CURRENT_USER_QUERY = gql`
-    query {
-      thisUser {
-        id
-        email
-        firstName
-        lastName
-        profiles {
-          id
-        }
-      }
-    }
-  `;
-
-  const { loading } = useQuery(GET_CURRENT_USER_QUERY, {
-    onCompleted: (data) => {
-      setUser({
-        loggedIn: true,
-        user: data.thisUser,
-      });
-    },
-    onError: (_err) => {
-      setUser({ loggedIn: false });
-    },
-  });
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
+  const loggedIn = isUserAuthenticated();
   return (
     <Router>
       <Switch>
         <Route exact path="/">
-          {user.loggedIn ? <Redirect to="/dashboard" /> : <RegisterPage />}
+          {loggedIn ? <Redirect to="/dashboard" /> : <RegisterPage />}
         </Route>
         <Route exact path="/login">
-          {user.loggedIn ? <Redirect to="/dashboard" /> : <LoginPage />}
+          {loggedIn ? <Redirect to="/dashboard" /> : <LoginPage />}
         </Route>
 
         <PrivateRoute>
