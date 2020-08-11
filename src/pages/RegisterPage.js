@@ -3,12 +3,9 @@ import logo from "../logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import { gql, useMutation } from "@apollo/client";
 import PulseLoader from "react-spinners/PulseLoader";
 import { loginUser } from "../utils/auth";
-import { useSetRecoilState } from "recoil";
-import { currentUser } from "../store/atoms";
 import GitHubLogin from "react-github-login";
 
 const RegisterPage = () => {
@@ -38,6 +35,9 @@ const RegisterPage = () => {
             email
             firstName
             lastName
+            profiles {
+              id
+            }
           }
         }
       }
@@ -78,18 +78,12 @@ const RegisterPage = () => {
     }
   `;
 
-  const setUser = useSetRecoilState(currentUser);
-
   const [
     registerUser,
     { loading: mutationLoading, error: mutationError, data: mutationData },
   ] = useMutation(MUTATION_USER_REGISTRATION, {
     onCompleted: (data) => {
-      loginUser(data.register.login.token, false);
-      setUser({
-        loggedIn: true,
-        user: data.register.login.user,
-      });
+      loginUser(data.register.login.token, data.register.login.user, false);
       history.push("/dashboard");
     },
     onError: (err) => console.log(err),
@@ -100,10 +94,6 @@ const RegisterPage = () => {
     {
       onCompleted: (data) => {
         loginUser(data.loginWithGithub.token, false);
-        setUser({
-          loggedIn: true,
-          user: data.loginWithGithub.user,
-        });
         history.push("/dashboard");
       },
       onError: (err) => console.log(err),

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import RepoSelectionPage from "./RepoSelectionPage";
 import PulseLoader from "react-spinners/PulseLoader";
-import { useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useMutation } from "@apollo/client";
 import Portal from "../Portal";
 import EmbedCodeModal from "./EmbedCodeModal";
 

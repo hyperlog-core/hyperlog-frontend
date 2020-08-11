@@ -3,12 +3,9 @@ import logo from "../logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import { gql, useMutation } from "@apollo/client";
 import { loginUser } from "../utils/auth";
 import PulseLoader from "react-spinners/PulseLoader";
-import { useSetRecoilState } from "recoil";
-import { currentUser } from "../store/atoms";
 import GitHubLogin from "react-github-login";
 
 const LoginPage = () => {
@@ -21,6 +18,9 @@ const LoginPage = () => {
           email
           firstName
           lastName
+          profiles {
+            id
+          }
         }
       }
     }
@@ -43,38 +43,27 @@ const LoginPage = () => {
   `;
 
   let history = useHistory();
-
-  const setUser = useSetRecoilState(currentUser);
-
-  const [loginWithGithub, { loading: ghLoading }] = useMutation(
-    MUTATION_LOGIN_GITHUB,
-    {
-      onCompleted: (data) => {
-        loginUser(data.loginWithGithub.token, false);
-        setUser({
-          loggedIn: true,
-          user: data.loginWithGithub.user,
-        });
-        history.push("/dashboard");
-      },
-      onError: (err) => console.log(err),
-    }
-  );
-
   const [
     userLogin,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(MUTATION_LOGIN_USER, {
     onCompleted: (data) => {
-      loginUser(data.login.token, formik.values.remember);
-      setUser({
-        loggedIn: true,
-        user: data.login.user,
-      });
+      loginUser(data.login.token, data.login.user, formik.values.remember);
       history.push("/dashboard");
     },
     onError: (err) => console.log(err),
   });
+
+  const [loginWithGithub, { loading: ghLoading }] = useMutation(
+    MUTATION_LOGIN_GITHUB,
+    {
+      onCompleted: (data) => {
+        loginUser(data.loginWithGithub.token, data.loginWithGithub.user, false);
+        history.push("/dashboard");
+      },
+      onError: (err) => console.log(err),
+    }
+  );
 
   const NORMAL_INPUT_CLASS =
     "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5";

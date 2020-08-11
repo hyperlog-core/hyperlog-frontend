@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import MoonLoader from "react-spinners/MoonLoader";
 import { logoutUser } from "../utils/auth";
-import { useApolloClient, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-import { currentUser } from "../store/atoms";
-import { useSetRecoilState } from "recoil";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
 
 const Logout = () => {
   const client = useApolloClient();
-
-  const setUser = useSetRecoilState(currentUser);
+  const history = useHistory();
 
   const LOGOUT_MUTATION = gql`
     mutation {
@@ -23,9 +20,7 @@ const Logout = () => {
     onCompleted: () => {
       logoutUser();
       client.clearStore();
-      setUser({
-        loggedIn: false,
-      });
+      history.push("/login");
     },
   });
 

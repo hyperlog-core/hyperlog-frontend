@@ -1,36 +1,18 @@
 import React, { useState } from "react";
 import logo from "../logo-white.svg";
 import Transition from "../helpers/Transition";
-import { useHistory, useRouteMatch, Link } from "react-router-dom";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
+import { useRouteMatch, Link } from "react-router-dom";
 import md5 from "md5";
 
 const NavBar = () => {
-  const history = useHistory();
+  const user = JSON.parse(localStorage.getItem("user"));
   const dashboardMatch = useRouteMatch({
     path: "/dashboard",
     exact: true,
   });
 
-  const GET_CURRENT_USER_QUERY = gql`
-    query {
-      thisUser {
-        email
-      }
-    }
-  `;
-
-  const { loading, data } = useQuery(GET_CURRENT_USER_QUERY, {
-    onError: (_err) => history.push("/error"),
-  });
-
   let [isMobileMenuOpen, toggleMobileMenu] = useState(false);
   let [isProfileDropdownOpen, toggleProfileDropdown] = useState(false);
-
-  if (loading) {
-    return <></>;
-  }
 
   return (
     <nav className="bg-gray-800">
@@ -131,7 +113,7 @@ const NavBar = () => {
                   <img
                     className="h-8 w-8 rounded-full"
                     src={`https://www.gravatar.com/avatar/${md5(
-                      data.thisUser.email
+                      user.email
                     )}?s=256&d=identicon`}
                     alt=""
                   />

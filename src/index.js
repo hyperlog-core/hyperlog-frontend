@@ -4,10 +4,14 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./tailwind.generated.css";
-import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "@apollo/react-hooks";
-import { RecoilRoot } from "recoil";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
 import * as Sentry from "@sentry/react";
+import { setContext } from "@apollo/client/link/context";
 
 if (process.env.NODE_ENV === "production") {
   Sentry.init({
@@ -16,16 +20,23 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql/`,
-  request: (operation) => {
-    const token = localStorage.getItem("token");
-    operation.setContext({
-      headers: {
-        authorization: token ? `JWT ${token}` : "",
-      },
-    });
-  },
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("token");
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `JWT ${token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
 });
 
 if (
@@ -33,18 +44,17 @@ if (
   localStorage.getItem("expire") < Date.now()
 ) {
   localStorage.removeItem("expire");
+  localStorage.removeItem("user");
   localStorage.removeItem("token");
 }
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <RecoilRoot>
-      <React.StrictMode>
-        <div className="h-screen">
-          <App />
-        </div>
-      </React.StrictMode>
-    </RecoilRoot>
+    <React.StrictMode>
+      <div className="h-screen">
+        <App />
+      </div>
+    </React.StrictMode>
   </ApolloProvider>,
   document.getElementById("root")
 );

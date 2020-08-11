@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import UserLayout from "../layout/UserLayout";
-import { gql } from "apollo-boost";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useFormik } from "formik";

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -176,8 +175,6 @@ const MUTATION_SELECT_REPOS = gql`
 const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
-
-  console.log(repos);
 
   var selectedIndexes = [];
 
