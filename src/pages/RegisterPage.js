@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
@@ -94,12 +94,22 @@ const RegisterPage = () => {
     onError: (err) => console.log(err),
   });
 
+  const [error, setError] = useState(false);
+
   const [loginWithGithub, { loading: ghLoading }] = useMutation(
     MUTATION_LOGIN_GITHUB,
     {
       onCompleted: (data) => {
-        loginUser(data.loginWithGithub.token, data.loginWithGithub.user, false);
-        history.push("/dashboard");
+        if (data.loginWithGithub.success) {
+          loginUser(
+            data.loginWithGithub.token,
+            data.loginWithGithub.user,
+            false
+          );
+          history.push("/dashboard");
+        } else {
+          setError(true);
+        }
       },
       onError: (err) => console.log(err),
     }
@@ -182,6 +192,31 @@ const RegisterPage = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div>
             <div>
+              {error && (
+                <div class="rounded-md bg-red-50 p-4 mb-4">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <svg
+                        class="h-5 w-5 text-red-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm leading-5 font-normal text-red-800">
+                        Login with your password and associate the account with
+                        GitHub.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
               <span class="w-full inline-flex rounded-md shadow-sm">
                 <GitHubLogin
                   clientId="42782b0ad960d7bae699"
