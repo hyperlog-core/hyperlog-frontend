@@ -4,6 +4,8 @@ import UserLayout from "../layout/UserLayout";
 import GithubConnect from "../components/GithubConnect";
 import ProfileInfo from "../components/ProfileInfo";
 import { refreshUser } from "../utils/auth";
+import Portal from "../Portal";
+import SetUsernameModal from "../components/SetUsernameModal";
 
 const GET_USER_POLL = gql`
   query {
@@ -11,7 +13,9 @@ const GET_USER_POLL = gql`
       id
       firstName
       lastName
+      username
       email
+      newUser
       profiles {
         id
       }
@@ -35,19 +39,20 @@ const DashboardPage = () => {
     refreshUser(data.thisUser);
   }
 
-  if (user.profiles.length === 0) {
-    return (
-      <UserLayout header={`One more step...`}>
-        <GithubConnect />
+  return (
+    <>
+      <UserLayout
+        header={user.profiles.length === 0 ? `One more step...` : "Dashboard"}
+      >
+        {user.profiles.length === 0 ? <GithubConnect /> : <ProfileInfo />}
       </UserLayout>
-    );
-  } else {
-    return (
-      <UserLayout header={`Dashboard`}>
-        <ProfileInfo />
-      </UserLayout>
-    );
-  }
+      {user.newUser && (
+        <Portal>
+          <SetUsernameModal isOpen={user.newUser} username={user.username} />
+        </Portal>
+      )}
+    </>
+  );
 };
 
 export default DashboardPage;

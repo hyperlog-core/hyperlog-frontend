@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
 import { loginUser } from "../utils/auth";
 import PulseLoader from "react-spinners/PulseLoader";
+import GitHubLogin from "react-github-login";
 
 const LoginPage = () => {
   const MUTATION_LOGIN_USER = gql`
@@ -25,8 +26,30 @@ const LoginPage = () => {
     }
   `;
 
-  let history = useHistory();
+  const MUTATION_LOGIN_GITHUB = gql`
+    mutation($code: String!) {
+      loginWithGithub(code: $code) {
+        success
+        errors
+        token
+        user {
+          id
+          email
+          firstName
+          lastName
+          newUser
+          username
+          profiles {
+            id
+          }
+        }
+      }
+    }
+  `;
 
+  const [error, setError] = useState(false);
+
+  let history = useHistory();
   const [
     userLogin,
     { loading: mutationLoading, error: mutationError },
@@ -37,6 +60,25 @@ const LoginPage = () => {
     },
     onError: (err) => console.log(err),
   });
+
+  const [loginWithGithub, { loading: ghLoading }] = useMutation(
+    MUTATION_LOGIN_GITHUB,
+    {
+      onCompleted: (data) => {
+        if (data.loginWithGithub.success) {
+          loginUser(
+            data.loginWithGithub.token,
+            data.loginWithGithub.user,
+            false
+          );
+          history.push("/dashboard");
+        } else {
+          setError(true);
+        }
+      },
+      onError: (err) => console.log(err),
+    }
+  );
 
   const NORMAL_INPUT_CLASS =
     "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5";
@@ -66,13 +108,85 @@ const LoginPage = () => {
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm">
           <div>
-            <img className="h-12 w-auto" src={logo} alt="Workflow" />
+            <img className="h-12 w-auto" src={logo} alt="Hyperlog" />
             <h2 className="mt-6 text-3xl leading-9 font-extrabold text-gray-900">
               Sign in to your account
             </h2>
           </div>
 
           <div className="mt-8">
+            <div>
+              <div>
+                {error && (
+                  <div class="rounded-md bg-red-50 p-4 mb-4">
+                    <div class="flex">
+                      <div class="flex-shrink-0">
+                        <svg
+                          class="h-5 w-5 text-red-400"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div class="ml-3">
+                        <p class="text-sm leading-5 font-normal text-red-800">
+                          Login with your password and associate the account
+                          with GitHub.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <span class="w-full inline-flex rounded-md shadow-sm">
+                  <GitHubLogin
+                    clientId="42782b0ad960d7bae699"
+                    redirectUri=""
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-600 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition duration-150 ease-in-out"
+                    onSuccess={(data) =>
+                      loginWithGithub({ variables: { code: data["code"] } })
+                    }
+                    onFailure={(e) => console.log(e)}
+                    children={
+                      ghLoading ? (
+                        <PulseLoader size="10px" />
+                      ) : (
+                        <>
+                          <svg
+                            className="-ml-1 mr-3 w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Login with Github
+                        </>
+                      )
+                    }
+                  />
+                </span>
+              </div>
+
+              <div class="mt-6 relative">
+                <div class="absolute inset-0 flex items-center">
+                  <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm leading-5">
+                  <span class="px-2 bg-white text-gray-500">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6">
               {mutationError ? (
                 <div className="rounded-md bg-red-50 p-4 mb-6">
@@ -261,7 +375,7 @@ const LoginPage = () => {
       <div className="hidden lg:block relative w-0 flex-1">
         <img
           className="absolute inset-0 h-full w-full object-cover"
-          src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+          src="https://images.unsplash.com/photo-1528660544347-95a93c58e424?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=steve-halama-Yhc7YGZlz3g-unsplash.jpg&w=1920"
           alt=""
         />
       </div>
