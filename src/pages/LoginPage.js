@@ -7,6 +7,9 @@ import { gql, useMutation } from "@apollo/client";
 import { loginUser } from "../utils/auth";
 import PulseLoader from "react-spinners/PulseLoader";
 import GitHubLogin from "react-github-login";
+import Portal from "../Portal";
+import ForgotPass from "../components/ForgotPass";
+import Notification from "../components/Notification";
 
 const LoginPage = () => {
   const MUTATION_LOGIN_USER = gql`
@@ -48,6 +51,8 @@ const LoginPage = () => {
   `;
 
   const [error, setError] = useState(false);
+  const [forgotPass, setForgotPass] = useState(false);
+  const [notification, setNotification] = useState(false);
 
   let history = useHistory();
   const [
@@ -325,7 +330,10 @@ const LoginPage = () => {
                   </div>
 
                   <div className="text-sm leading-5">
-                    <button className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                    <button
+                      onClick={() => setForgotPass(true)}
+                      className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150"
+                    >
                       Forgot your password?
                     </button>
                   </div>
@@ -379,6 +387,19 @@ const LoginPage = () => {
           alt=""
         />
       </div>
+      <Portal>
+        <ForgotPass
+          isOpen={forgotPass}
+          setIsOpen={setForgotPass}
+          showNotification={setNotification}
+        />
+        <Notification
+          primaryText="Link sent to registered email"
+          secondaryText="We've successfully sent the mail to your registered mail. Please check all folders."
+          show={notification}
+          toggle={setNotification}
+        />
+      </Portal>
     </div>
   );
 };
