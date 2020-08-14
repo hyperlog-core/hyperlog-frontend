@@ -101,8 +101,8 @@ const ProfilePage = () => {
         );
 
         popup.then(
-          (data) => console.log(data),
-          (error) => console.log(error)
+          (_data) => history.go(),
+          (_err) => history.go()
         );
       }
     },
