@@ -58,7 +58,6 @@ const DashboardPage = () => {
             redirectUri="http://localhost:3000"
           />
         )}
-        {user.profileAnalyses}
       </UserLayout>
       {user.newUser && (
         <Portal>
