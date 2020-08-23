@@ -6,6 +6,7 @@ import ProfileInfo from "../components/ProfileInfo";
 import { refreshUser } from "../utils/auth";
 import Portal from "../Portal";
 import SetUsernameModal from "../components/SetUsernameModal";
+import StackoverflowConnect from "../components/StackoverflowConnect";
 
 const GET_USER_POLL = gql`
   query {
@@ -18,6 +19,10 @@ const GET_USER_POLL = gql`
       newUser
       profiles {
         id
+      }
+      stackOverflow {
+        id
+        reputation
       }
     }
   }
@@ -45,6 +50,14 @@ const DashboardPage = () => {
         header={user.profiles.length === 0 ? `One more step...` : "Dashboard"}
       >
         {user.profiles.length === 0 ? <GithubConnect /> : <ProfileInfo />}
+        {user.stackOverflow ? (
+          `StackOverflow is connected! Reputation: ${user.stackOverflow.reputation}`
+        ) : (
+          <StackoverflowConnect
+            clientId="18592"
+            redirectUri="http://localhost:3000"
+          />
+        )}
       </UserLayout>
       {user.newUser && (
         <Portal>
