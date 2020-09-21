@@ -13,6 +13,8 @@ import LoginPage from "./pages/LoginPage";
 import Logout from "./helpers/Logout";
 import NavBar from "./components/NavBar";
 import { isUserAuthenticated } from "./utils/auth";
+import HomeProcessing from "./pages/HomeProcessing";
+import SetupUser from "./pages/SetupUser";
 
 function App() {
   const loggedIn = isUserAuthenticated();
@@ -27,11 +29,18 @@ function App() {
         </Route>
 
         <PrivateRoute>
-          <NavBar />
+          <Route exact path="/home">
+            <HomeProcessing />
+          </Route>
+          <Route exact path="/setup">
+            <SetupUser />
+          </Route>
           <Route exact path="/dashboard">
+            <NavBar />
             <DashboardPage />
           </Route>
           <Route exact path="/profile">
+            <NavBar />
             <ProfilePage />
           </Route>
           <Route exact path="/logout">

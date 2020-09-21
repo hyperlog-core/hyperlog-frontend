@@ -61,7 +61,7 @@ const LoginPage = () => {
   ] = useMutation(MUTATION_LOGIN_USER, {
     onCompleted: (data) => {
       loginUser(data.login.token, data.login.user, formik.values.remember);
-      history.push("/dashboard");
+      history.push("/home");
     },
     onError: (err) => console.log(err),
   });
@@ -76,7 +76,7 @@ const LoginPage = () => {
             data.loginWithGithub.user,
             false
           );
-          history.push("/dashboard");
+          history.push("/home");
         } else {
           setError(true);
         }
