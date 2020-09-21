@@ -219,7 +219,7 @@ const RegisterPage = () => {
               )}
               <span class="w-full inline-flex rounded-md shadow-sm">
                 <GitHubLogin
-                  clientId="42782b0ad960d7bae699"
+                  clientId={process.env.REACT_APP_GITHUB_AUTH_APP_ID}
                   redirectUri=""
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-600 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition duration-150 ease-in-out"
                   onSuccess={(data) =>
