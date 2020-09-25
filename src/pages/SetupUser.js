@@ -1,16 +1,52 @@
+import { gql, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+import GithubConnect from "../components/GithubConnect";
+import SetUserInfoStep from "../components/SetUserInfoStep";
 import logo from "../logo.svg";
+import { refreshUser } from "../utils/auth";
+
+const GET_USER_POLL = gql`
+  query {
+    thisUser {
+      id
+      firstName
+      lastName
+      username
+      email
+      newUser
+      showAvatar
+      themeCode
+      socialLinks
+      tagline
+      profiles {
+        id
+      }
+      stackOverflow {
+        id
+      }
+    }
+  }
+`;
 
 const SetupUser = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [currentStep, setCurrentStep] = useState("");
+  const { loading, data, startPolling, stopPolling } = useQuery(GET_USER_POLL);
+
   useEffect(() => {
     if (user.profiles.length === 0) {
-      // setCurrentStep("connections");
-      // } else if (user.socialLinks === "{}") {
+      setCurrentStep("connections");
+    } else if (user.socialLinks === "{}") {
       setCurrentStep("information");
     }
-  }, [setCurrentStep, user]);
+    startPolling(1000);
+    if (!loading && data.thisUser !== user) {
+      refreshUser(data.thisUser);
+    }
+    return () => {
+      stopPolling();
+    };
+  }, [setCurrentStep, user, startPolling, stopPolling]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
@@ -149,6 +185,10 @@ const SetupUser = () => {
               </li>
             </ul>
           </nav>
+          <div className="mt-5">
+            {currentStep === "connections" && <GithubConnect />}
+            {currentStep === "information" && <SetUserInfoStep />}
+          </div>
         </div>
       </div>
     </div>
