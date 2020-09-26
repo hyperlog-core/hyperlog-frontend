@@ -17,6 +17,7 @@ const GET_USER = gql`
       showAvatar
       themeCode
       socialLinks
+      setupStep
       tagline
       profiles {
         id
@@ -34,11 +35,7 @@ const HomeProcessing = () => {
 
   if (!loading && JSON.parse(localStorage.getItem("user")) !== data.thisUser) {
     refreshUser(data.thisUser);
-    if (
-      data.thisUser.socialLinks === "{}" ||
-      data.thisUser.profiles.length === 0 ||
-      data.thisUser.newUser
-    ) {
+    if (data.thisUser.setupStep !== 0) {
       history.push("/setup");
     } else {
       history.push("/dashboard");

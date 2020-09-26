@@ -22,10 +22,10 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          {loggedIn ? <Redirect to="/dashboard" /> : <RegisterPage />}
+          {loggedIn ? <Redirect to="/home" /> : <RegisterPage />}
         </Route>
         <Route exact path="/login">
-          {loggedIn ? <Redirect to="/dashboard" /> : <LoginPage />}
+          {loggedIn ? <Redirect to="/home" /> : <LoginPage />}
         </Route>
 
         <PrivateRoute>

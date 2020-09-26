@@ -89,7 +89,7 @@ const RegisterPage = () => {
   ] = useMutation(MUTATION_USER_REGISTRATION, {
     onCompleted: (data) => {
       loginUser(data.register.login.token, data.register.login.user, false);
-      history.push("/dashboard");
+      history.push("/home");
     },
     onError: (err) => console.log(err),
   });
@@ -106,7 +106,7 @@ const RegisterPage = () => {
             data.loginWithGithub.user,
             false
           );
-          history.push("/dashboard");
+          history.push("/home");
         } else {
           setError(true);
         }
