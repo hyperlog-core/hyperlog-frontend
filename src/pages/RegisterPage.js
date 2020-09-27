@@ -193,11 +193,11 @@ const RegisterPage = () => {
           <div>
             <div>
               {error && (
-                <div class="rounded-md bg-red-50 p-4 mb-4">
-                  <div class="flex">
-                    <div class="flex-shrink-0">
+                <div className="rounded-md bg-red-50 p-4 mb-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
                       <svg
-                        class="h-5 w-5 text-red-400"
+                        className="h-5 w-5 text-red-400"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -208,8 +208,8 @@ const RegisterPage = () => {
                         />
                       </svg>
                     </div>
-                    <div class="ml-3">
-                      <p class="text-sm leading-5 font-normal text-red-800">
+                    <div className="ml-3">
+                      <p className="text-sm leading-5 font-normal text-red-800">
                         Login with your password and associate the account with
                         GitHub.
                       </p>
@@ -217,7 +217,7 @@ const RegisterPage = () => {
                   </div>
                 </div>
               )}
-              <span class="w-full inline-flex rounded-md shadow-sm">
+              <span className="w-full inline-flex rounded-md shadow-sm">
                 <GitHubLogin
                   clientId={process.env.REACT_APP_GITHUB_AUTH_APP_ID}
                   redirectUri=""
@@ -250,12 +250,12 @@ const RegisterPage = () => {
               </span>
             </div>
 
-            <div class="mt-6 relative">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-300"></div>
+            <div className="mt-6 relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
               </div>
-              <div class="relative flex justify-center text-sm leading-5">
-                <span class="px-2 bg-white text-gray-500">
+              <div className="relative flex justify-center text-sm leading-5">
+                <span className="px-2 bg-white text-gray-500">
                   Or do manual labour
                 </span>
               </div>
@@ -323,7 +323,7 @@ const RegisterPage = () => {
             <form onSubmit={formik.handleSubmit}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlhtmlFor="email"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Email address
@@ -402,7 +402,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlFor="name"
+                  htmlhtmlFor="name"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Name
@@ -475,7 +475,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlFor="username"
+                  htmlhtmlFor="username"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Username
@@ -554,7 +554,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlFor="password"
+                  htmlhtmlFor="password"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Password
@@ -598,7 +598,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlFor="confirmPassword"
+                  htmlhtmlFor="confirmPassword"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Confirm Password

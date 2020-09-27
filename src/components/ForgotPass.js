@@ -59,10 +59,10 @@ const ForgotPass = ({ isOpen, setIsOpen, showNotification }) => {
         leaveTo="opacity-0"
       >
         <div
-          class="fixed inset-0 transition-opacity"
+          className="fixed inset-0 transition-opacity"
           onClick={() => setIsOpen(false)}
         >
-          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
       </Transition>
 
@@ -76,24 +76,24 @@ const ForgotPass = ({ isOpen, setIsOpen, showNotification }) => {
         leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       >
         <div
-          class="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6"
+          className="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-headline"
         >
           <form onSubmit={formik.handleSubmit}>
             <div>
-              <div class="text-center">
+              <div className="text-center">
                 <h3
-                  class="text-lg leading-6 font-medium text-gray-900"
+                  className="text-lg leading-6 font-medium text-gray-900"
                   id="modal-headline"
                 >
                   Enter your username
                 </h3>
-                <div class="mt-2">
+                <div className="mt-2">
                   <div className="mt-6">
                     <label
-                      htmlFor="username"
+                      htmlhtmlFor="username"
                       className="block text-sm font-medium leading-5 text-gray-700"
                     >
                       Username
@@ -141,11 +141,11 @@ const ForgotPass = ({ isOpen, setIsOpen, showNotification }) => {
                 </div>
               </div>
             </div>
-            <div class="mt-5 sm:mt-6">
-              <span class="flex w-full rounded-md shadow-sm">
+            <div className="mt-5 sm:mt-6">
+              <span className="flex w-full rounded-md shadow-sm">
                 <button
                   type="submit"
-                  class={`inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 text-base leading-6 font-medium text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                  className={`inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 text-base leading-6 font-medium text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
                 >
                   Send Password Reset Mail
                 </button>

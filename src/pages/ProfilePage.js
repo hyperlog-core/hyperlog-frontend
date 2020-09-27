@@ -232,7 +232,7 @@ const ProfilePage = () => {
                     <div className="col-span-6 sm:col-span-3">
                       <div>
                         <label
-                          htmlFor="firstName"
+                          htmlhtmlFor="firstName"
                           className="block text-sm font-medium leading-5 text-gray-700"
                         >
                           First name
@@ -280,7 +280,7 @@ const ProfilePage = () => {
                     <div className="col-span-6 sm:col-span-3">
                       <div>
                         <label
-                          htmlFor="lastName"
+                          htmlhtmlFor="lastName"
                           className="block text-sm font-medium leading-5 text-gray-700"
                         >
                           Last name
@@ -499,7 +499,7 @@ const ProfilePage = () => {
                       <div className="grid grid-cols-1 gap-6">
                         <div>
                           <label
-                            htmlFor="oldPassword"
+                            htmlhtmlFor="oldPassword"
                             className="block text-sm font-medium leading-5 text-gray-700"
                           >
                             Old Password
@@ -547,7 +547,7 @@ const ProfilePage = () => {
                         </div>
                         <div>
                           <label
-                            htmlFor="newPassword"
+                            htmlhtmlFor="newPassword"
                             className="block text-sm font-medium leading-5 text-gray-700"
                           >
                             New Password
@@ -595,7 +595,7 @@ const ProfilePage = () => {
                         </div>
                         <div>
                           <label
-                            htmlFor="confirmNewPassword"
+                            htmlhtmlFor="confirmNewPassword"
                             className="block text-sm font-medium leading-5 text-gray-700"
                           >
                             Confirm New Password

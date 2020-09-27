@@ -18,16 +18,16 @@ const PreviousStepButton = ({ setStep }) => {
   });
 
   return (
-    <span class="inline-flex rounded-md shadow-sm">
+    <span className="inline-flex rounded-md shadow-sm">
       <button
         type="button"
-        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-50 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-200 transition ease-in-out duration-150"
+        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-50 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-200 transition ease-in-out duration-150"
         onClick={previousStep}
       >
         {!loading ? (
           <>
             <svg
-              class="-ml-0.5 mr-2 h-4 w-4"
+              className="-ml-0.5 mr-2 h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

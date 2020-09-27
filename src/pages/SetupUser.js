@@ -264,15 +264,15 @@ const SetupUser = () => {
           </nav>
           <div className="mt-5">
             {currentStep === 1 && (
-              <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="px-4 py-5 sm:p-6">
                   {user.current.profiles.length === 0 ? (
                     <GithubConnect />
                   ) : (
                     <div>Profile connected successfully.</div>
                   )}
                 </div>
-                <div class="bg-gray-50 px-4 py-4 sm:px-6 text-right">
+                <div className="bg-gray-50 px-4 py-4 sm:px-6 text-right">
                   <NextStepButton setStep={setCurrentStep} />
                 </div>
               </div>
