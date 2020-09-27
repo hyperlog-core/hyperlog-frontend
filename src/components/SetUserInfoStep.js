@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import React from "react";
 import PreviousStepButton from "../components/Buttons/PreviousStepButton";
+import { PulseLoader } from "react-spinners";
 
 const MUTATION_SET_USER_DATA = gql`
   mutation(
@@ -32,14 +33,32 @@ const MUTATION_SET_USER_DATA = gql`
   }
 `;
 
-const SetUserInfoStep = ({ setStep }) => {
+const MUTATION_NEXT_STEP = gql`
+  mutation {
+    nextSetupStep {
+      new
+    }
+  }
+`;
+
+const ERROR_INPUT_CLASS =
+  "form-input block w-full pr-10 border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red sm:text-sm sm:leading-5";
+
+const SetUserInfoStep = ({ setStep, user }) => {
+  const social = JSON.parse(user.socialLinks);
+  const [nextStep, { loading }] = useMutation(MUTATION_NEXT_STEP, {
+    onCompleted: (data) => {
+      setStep(data.nextSetupStep.new);
+    },
+  });
+
   const [
     setUserData,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(MUTATION_SET_USER_DATA, {
     onCompleted: (data) => {
       if (data.setSocialLinks.success && data.setTagline.success) {
-        // TODO: Set next step
+        nextStep();
       }
     },
     onError: (err) => console.log(err),
@@ -47,13 +66,14 @@ const SetUserInfoStep = ({ setStep }) => {
 
   const formik = useFormik({
     initialValues: {
-      twitter: "",
-      devto: "",
-      github: "",
-      facebook: "",
-      stackoverflow: "",
-      tagline: "",
-      dribble: "",
+      twitter: social.twitter ?? "",
+      devto: social.devto ?? "",
+      github: social.github ?? "",
+      facebook: social.facebook ?? "",
+      linkedin: social.linkedin ?? "",
+      stackoverflow: social.stackoverflow ?? "",
+      tagline: user.tagline ?? "",
+      dribble: social.dribble ?? "",
     },
     validationSchema: Yup.object({
       twitter: Yup.string(),
@@ -63,6 +83,7 @@ const SetUserInfoStep = ({ setStep }) => {
       stackoverflow: Yup.number(),
       tagline: Yup.string().max(255).required(),
       dribble: Yup.string(),
+      linkedin: Yup.string(),
     }),
     onSubmit: (values) => {
       setUserData({
@@ -90,30 +111,41 @@ const SetUserInfoStep = ({ setStep }) => {
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <div className="max-w-lg rounded-md shadow-sm sm:max-w-xs">
-                  <input
-                    id="tagline"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.tagline}
-                    className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                    placeholder="Developer by day, Batman by night"
-                  />
-                  {formik.touched.tagline && formik.errors.tagline ? (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg
-                        className="h-5 w-5 text-red-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  ) : null}
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <input
+                      id="tagline"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.tagline}
+                      className={
+                        formik.touched.tagline && formik.errors.tagline
+                          ? ERROR_INPUT_CLASS
+                          : "form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      }
+                      placeholder="Developer by day, Batman by night"
+                    />
+                    {formik.touched.tagline && formik.errors.tagline ? (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg
+                          className="h-5 w-5 text-red-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
+                {formik.touched.tagline && formik.errors.tagline ? (
+                  <p className="mt-2 text-sm text-red-600" id="email-error">
+                    Come on, you gotta have the tagline
+                  </p>
+                ) : null}
               </div>
             </div>
           </div>
@@ -140,6 +172,9 @@ const SetUserInfoStep = ({ setStep }) => {
                   </span>
                   <input
                     id="linkedin"
+                    value={formik.values.linkedin}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="Username"
                   />
@@ -158,6 +193,9 @@ const SetUserInfoStep = ({ setStep }) => {
                   </span>
                   <input
                     id="devto"
+                    value={formik.values.devto}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="Username"
                   />
@@ -176,6 +214,10 @@ const SetUserInfoStep = ({ setStep }) => {
                   </span>
                   <input
                     id="stackoverflow"
+                    type="number"
+                    value={formik.values.stackoverflow}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="User Number"
                   />
@@ -183,7 +225,7 @@ const SetUserInfoStep = ({ setStep }) => {
               </div>
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  htmlFor="dribbble"
+                  htmlFor="dribble"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Dribbble
@@ -193,7 +235,10 @@ const SetUserInfoStep = ({ setStep }) => {
                     dribbble.com/
                   </span>
                   <input
-                    id="dribbble"
+                    id="dribble"
+                    value={formik.values.dribble}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="Username"
                   />
@@ -212,6 +257,9 @@ const SetUserInfoStep = ({ setStep }) => {
                   </span>
                   <input
                     id="facebook"
+                    value={formik.values.facebook}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="Username"
                   />
@@ -230,6 +278,9 @@ const SetUserInfoStep = ({ setStep }) => {
                   </span>
                   <input
                     id="twitter"
+                    value={formik.values.twitter}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="Username"
                   />
@@ -248,6 +299,9 @@ const SetUserInfoStep = ({ setStep }) => {
                   </span>
                   <input
                     id="github"
+                    value={formik.values.github}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="form-input flex-1 block w-full px-3 py-2 rounded-none rounded-r-md sm:text-sm sm:leading-5"
                     placeholder="Username"
                   />
@@ -256,26 +310,32 @@ const SetUserInfoStep = ({ setStep }) => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="mt-5">
           <div className="px-4 py-3 bg--cool-gray-50 sm:px-6 flex justify-between">
             <PreviousStepButton setStep={setStep} />
             <div className="text-right">
               <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150">
-                Save and Continue
-                <svg
-                  className="ml-2 -mr-0.5 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
+                {mutationLoading || loading ? (
+                  <PulseLoader size="10px" color="#fff" />
+                ) : (
+                  <>
+                    Save and Continue
+                    <svg
+                      className="ml-2 -mr-0.5 h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      ></path>
+                    </svg>
+                  </>
+                )}
               </button>
             </div>
           </div>

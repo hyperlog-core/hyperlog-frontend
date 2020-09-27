@@ -1,9 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useEffect, useRef, useState } from "react";
 import NextStepButton from "../components/Buttons/NextStepButton";
+import PreviousStepButton from "../components/Buttons/PreviousStepButton";
 import GithubConnect from "../components/GithubConnect";
+import ProfileInfo from "../components/ProfileInfo";
 import SetUserInfoStep from "../components/SetUserInfoStep";
+import SetUsernameModal from "../components/SetUsernameModal";
 import logo from "../logo.svg";
+import Portal from "../Portal";
 import { refreshUser } from "../utils/auth";
 
 const GET_USER_POLL = gql`
@@ -255,7 +259,7 @@ const SetupUser = () => {
                           : "text-sm leading-5 font-medium text-gray-500 group-hover:text-gray-900 transition ease-in-out duration-150"
                       }
                     >
-                      Connections
+                      Project Showcase
                     </p>
                   </div>
                 </button>
@@ -273,11 +277,40 @@ const SetupUser = () => {
                   )}
                 </div>
                 <div className="bg-gray-50 px-4 py-4 sm:px-6 text-right">
+                  <NextStepButton
+                    setStep={setCurrentStep}
+                    disabled={user.current.profiles.length === 0}
+                  />
+                </div>
+              </div>
+            )}
+            {currentStep === 2 && (
+              <SetUserInfoStep setStep={setCurrentStep} user={user.current} />
+            )}
+            {currentStep === 3 && (
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="px-4 py-5 sm:p-6">
+                  {user.current.profiles.length === 0 ? (
+                    <GithubConnect />
+                  ) : (
+                    <ProfileInfo />
+                  )}
+                </div>
+                <div className="bg-gray-50 px-4 py-4 sm:px-6 flex justify-between">
+                  <PreviousStepButton setStep={setCurrentStep} />
                   <NextStepButton setStep={setCurrentStep} />
                 </div>
               </div>
             )}
-            {currentStep === 2 && <SetUserInfoStep setStep={setCurrentStep} />}
+
+            {user.current.newUser && (
+              <Portal>
+                <SetUsernameModal
+                  isOpen={user.current.newUser}
+                  username={user.current.username}
+                />
+              </Portal>
+            )}
           </div>
         </div>
       </div>

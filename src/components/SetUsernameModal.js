@@ -124,7 +124,7 @@ const SetUsernameModal = ({ isOpen, username }) => {
 
                   <div className="mt-6">
                     <label
-                      htmlhtmlFor="username"
+                      htmlFor="username"
                       className="block text-sm font-medium leading-5 text-gray-700"
                     >
                       Username

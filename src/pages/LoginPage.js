@@ -220,7 +220,7 @@ const LoginPage = () => {
               <form onSubmit={formik.handleSubmit}>
                 <div>
                   <label
-                    htmlhtmlFor="username"
+                    htmlFor="username"
                     className="block text-sm font-medium leading-5 text-gray-700"
                   >
                     Username
@@ -266,7 +266,7 @@ const LoginPage = () => {
 
                 <div className="mt-6">
                   <label
-                    htmlhtmlFor="password"
+                    htmlFor="password"
                     className="block text-sm font-medium leading-5 text-gray-700"
                   >
                     Password
@@ -322,7 +322,7 @@ const LoginPage = () => {
                       onBlur={formik.handleBlur}
                     />
                     <label
-                      htmlhtmlFor="remember"
+                      htmlFor="remember"
                       className="ml-2 block text-sm leading-5 text-gray-900"
                     >
                       Remember me

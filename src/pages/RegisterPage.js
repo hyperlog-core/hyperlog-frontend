@@ -323,7 +323,7 @@ const RegisterPage = () => {
             <form onSubmit={formik.handleSubmit}>
               <div>
                 <label
-                  htmlhtmlFor="email"
+                  htmlFor="email"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Email address
@@ -402,7 +402,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlhtmlFor="name"
+                  htmlFor="name"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Name
@@ -475,7 +475,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlhtmlFor="username"
+                  htmlFor="username"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Username
@@ -554,7 +554,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlhtmlFor="password"
+                  htmlFor="password"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Password
@@ -598,7 +598,7 @@ const RegisterPage = () => {
 
               <div className="mt-6">
                 <label
-                  htmlhtmlFor="confirmPassword"
+                  htmlFor="confirmPassword"
                   className="block text-sm font-medium leading-5 text-gray-700"
                 >
                   Confirm Password

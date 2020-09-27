@@ -43,7 +43,7 @@ const PreviousStepButton = ({ setStep }) => {
             Previous Step
           </>
         ) : (
-          <PulseLoader size="10px" color="#fff" />
+          <PulseLoader size="10px" color="#000" />
         )}
       </button>
     </span>

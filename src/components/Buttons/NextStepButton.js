@@ -10,7 +10,7 @@ const MUTATION_NEXT_STEP = gql`
   }
 `;
 
-const NextStepButton = ({ setStep }) => {
+const NextStepButton = ({ setStep, disabled }) => {
   const [nextStep, { loading }] = useMutation(MUTATION_NEXT_STEP, {
     onCompleted: (data) => {
       setStep(data.nextSetupStep.new);
@@ -21,8 +21,14 @@ const NextStepButton = ({ setStep }) => {
     <span className="inline-flex rounded-md shadow-sm">
       <button
         type="button"
-        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150"
-        onClick={nextStep}
+        className={
+          disabled
+            ? "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-100 bg-teal-600 opacity-25"
+            : "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150"
+        }
+        onClick={() => {
+          if (!disabled) nextStep();
+        }}
       >
         {!loading ? (
           <>
