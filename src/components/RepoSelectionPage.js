@@ -74,9 +74,9 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                         className="-ml-0.5 mr-1.5 h-3 w-3 text-orange-400"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                       Private Repo
@@ -92,9 +92,9 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                           className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       ) : (
