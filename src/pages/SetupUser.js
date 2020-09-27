@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NextStepButton from "../components/Buttons/NextStepButton";
 import GithubConnect from "../components/GithubConnect";
 import SetUserInfoStep from "../components/SetUserInfoStep";
@@ -31,15 +31,15 @@ const GET_USER_POLL = gql`
 `;
 
 const SetupUser = () => {
-  let user = JSON.parse(localStorage.getItem("user"));
-  const [currentStep, setCurrentStep] = useState(user.setupStep);
+  const user = useRef(JSON.parse(localStorage.getItem("user")));
+  const [currentStep, setCurrentStep] = useState(user.current.setupStep);
   const { loading, data, startPolling, stopPolling } = useQuery(GET_USER_POLL);
 
   useEffect(() => {
     startPolling(1000);
     if (!loading && data.thisUser !== user) {
       refreshUser(data.thisUser);
-      user = data.thisUser;
+      user.current = data.thisUser;
     }
     return () => {
       stopPolling();
@@ -266,7 +266,7 @@ const SetupUser = () => {
             {currentStep === 1 && (
               <div class="bg-white overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:p-6">
-                  {user.profiles.length === 0 ? (
+                  {user.current.profiles.length === 0 ? (
                     <GithubConnect />
                   ) : (
                     <div>Profile connected successfully.</div>
