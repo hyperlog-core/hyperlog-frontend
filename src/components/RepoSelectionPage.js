@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
+import { fetchUserRepositories } from "../utils/fetchUserRepositories";
 
 const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
   const classColors = (languageName) => {
@@ -46,7 +47,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
             <div className="flex-shrink-0">
               <img
                 className="h-12 w-12 rounded-full"
-                src={repo.imageUrl}
+                src={repo.owner.avatarUrl}
                 alt=""
               />
             </div>
@@ -57,7 +58,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                     isSelected && isEditing ? "font-bold" : "font-medium"
                   } text-indigo-600 truncate`}
                 >
-                  {repo.full_name}
+                  {repo.nameWithOwner}
                 </div>
                 <div
                   className={`mt-2 flex items-center text-sm leading-5 ${
@@ -119,15 +120,17 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
               </div>
               <div className="hidden md:block">
                 <div>
-                  <div className="text-sm leading-5 text-gray-900">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${classColors(
-                        repo.primaryLanguage
-                      )}`}
-                    >
-                      {repo.primaryLanguage}
-                    </span>
-                  </div>
+                  {repo.primaryLanguage ? (
+                    <div className="text-sm leading-5 text-gray-900">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${classColors(
+                          repo.primaryLanguage.name
+                        )}`}
+                      >
+                        {repo.primaryLanguage.name}
+                      </span>
+                    </div>
+                  ) : null}
                   <div className="mt-2 flex items-center text-sm leading-5 text-gray-500">
                     <svg
                       fill="currentColor"
@@ -136,7 +139,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                     >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                     </svg>
-                    {repo.stargazers} Stargazers
+                    {repo.stargazerCount} Stars
                   </div>
                 </div>
               </div>
@@ -172,17 +175,28 @@ const MUTATION_SELECT_REPOS = gql`
   }
 `;
 
-const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
+const RepoSelectionPage = ({ selected, editMode, firstTime }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
 
+  const [repos, setRepos] = useState(null);
   var selectedIndexes = [];
+  const [selectedPositions, setSelectedPositions] = useState([]);
 
-  if (selected.length > 0) {
-    selectedIndexes = selected.map((repo) => Object.keys(repos).indexOf(repo));
-  }
-
-  const [selectedPositions, setSelectedPositions] = useState(selectedIndexes);
+  useEffect(() => {
+    const userStored = JSON.parse(localStorage.getItem("user"));
+    fetchUserRepositories(userStored.profiles[0].accessToken, []).then(
+      (userRepos) => {
+        setRepos(userRepos);
+        if (selected.length > 0) {
+          selectedIndexes = selected.map((repo) =>
+            Object.keys(userRepos).indexOf(repo)
+          );
+          setSelectedPositions(selectedIndexes);
+        }
+      }
+    );
+  }, [setRepos, selected, setSelectedPositions]);
 
   const [selectRepos, { loading: mutationLoading }] = useMutation(
     MUTATION_SELECT_REPOS,
@@ -215,12 +229,20 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const submit = () => {
     const arr = [];
     selectedPositions.forEach((i) => {
-      arr.push(repos[Object.keys(repos)[i]].full_name);
+      arr.push(repos[Object.keys(repos)[i]].nameWithOwner);
     });
     selectRepos({
       variables: { repos: arr },
     });
   };
+
+  if (!repos) {
+    return (
+      <div className="flex w-full h-64 justify-center items-center">
+        <PulseLoader size="20px" color="#374151" />
+      </div>
+    );
+  }
 
   return (
     <div>

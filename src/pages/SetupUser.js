@@ -26,6 +26,7 @@ const GET_USER_POLL = gql`
       tagline
       profiles {
         id
+        accessToken
       }
       stackOverflow {
         id
@@ -293,12 +294,15 @@ const SetupUser = () => {
                   {user.current.profiles.length === 0 ? (
                     <GithubConnect />
                   ) : (
-                    <ProfileInfo />
+                    <ProfileInfo setupMode={true} />
                   )}
                 </div>
                 <div className="bg-gray-50 px-4 py-4 sm:px-6 flex justify-between">
                   <PreviousStepButton setStep={setCurrentStep} />
-                  <NextStepButton setStep={setCurrentStep} />
+                  <NextStepButton
+                    setStep={setCurrentStep}
+                    completeSetup={true}
+                  />
                 </div>
               </div>
             )}

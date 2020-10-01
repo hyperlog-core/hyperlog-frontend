@@ -52,17 +52,17 @@ const SetUserInfoStep = ({ setStep, user }) => {
     },
   });
 
-  const [
-    setUserData,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation(MUTATION_SET_USER_DATA, {
-    onCompleted: (data) => {
-      if (data.setSocialLinks.success && data.setTagline.success) {
-        nextStep();
-      }
-    },
-    onError: (err) => console.log(err),
-  });
+  const [setUserData, { loading: mutationLoading }] = useMutation(
+    MUTATION_SET_USER_DATA,
+    {
+      onCompleted: (data) => {
+        if (data.setSocialLinks.success && data.setTagline.success) {
+          nextStep();
+        }
+      },
+      onError: (err) => console.log(err),
+    }
+  );
 
   const formik = useFormik({
     initialValues: {

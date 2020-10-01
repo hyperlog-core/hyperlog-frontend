@@ -4,7 +4,7 @@ import RepoSelectionPage from "./RepoSelectionPage";
 import UserHomeDash from "./UserHomeDash";
 import { useUser } from "../utils/apiGateway";
 
-const ProfileInfo = ({ analyse, loading }) => {
+const ProfileInfo = ({ analyse, loading, setupMode }) => {
   const userStored = JSON.parse(localStorage.getItem("user"));
 
   const { user, isLoading, isError } = useUser(userStored.id);
@@ -21,7 +21,6 @@ const ProfileInfo = ({ analyse, loading }) => {
     console.log(user.data);
     return (
       <RepoSelectionPage
-        repos={user.data.repos}
         selected={user.data.selectedRepos ?? []}
         editMode={true}
         firstTime={true}
@@ -29,7 +28,12 @@ const ProfileInfo = ({ analyse, loading }) => {
     );
   } else if (user.data.selectedRepos) {
     return (
-      <UserHomeDash profile={user.data} analyse={analyse} loading={loading} />
+      <UserHomeDash
+        setupMode={setupMode}
+        profile={user.data}
+        analyse={analyse}
+        loading={loading}
+      />
     );
   } else {
     return (
