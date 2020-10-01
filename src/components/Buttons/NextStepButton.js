@@ -32,7 +32,7 @@ const NextStepButton = ({ setStep, disabled, completeSetup }) => {
     {
       onCompleted: (data) => {
         if (data.completeSetup.success) {
-          history.push("/home");
+          history.push("/dashboard");
         }
       },
     }

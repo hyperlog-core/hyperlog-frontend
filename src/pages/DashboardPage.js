@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import UserLayout from "../layout/UserLayout";
-import GithubConnect from "../components/GithubConnect";
-import ProfileInfo from "../components/ProfileInfo";
 import { refreshUser } from "../utils/auth";
 import StackoverflowConnect from "../components/StackoverflowConnect";
 

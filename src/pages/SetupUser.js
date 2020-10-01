@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NextStepButton from "../components/Buttons/NextStepButton";
 import PreviousStepButton from "../components/Buttons/PreviousStepButton";
 import GithubConnect from "../components/GithubConnect";
@@ -36,20 +36,20 @@ const GET_USER_POLL = gql`
 `;
 
 const SetupUser = () => {
-  const user = useRef(JSON.parse(localStorage.getItem("user")));
-  const [currentStep, setCurrentStep] = useState(user.current.setupStep);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [currentStep, setCurrentStep] = useState(user.setupStep);
   const { loading, data, startPolling, stopPolling } = useQuery(GET_USER_POLL);
 
   useEffect(() => {
     startPolling(1000);
     if (!loading && data.thisUser !== user) {
       refreshUser(data.thisUser);
-      user.current = data.thisUser;
+      setUser(data.thisUser);
     }
     return () => {
       stopPolling();
     };
-  }, [user, startPolling, stopPolling, data, loading]);
+  }, [user, startPolling, stopPolling, data, loading, setUser]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
@@ -271,7 +271,7 @@ const SetupUser = () => {
             {currentStep === 1 && (
               <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                  {user.current.profiles.length === 0 ? (
+                  {user.profiles.length === 0 ? (
                     <GithubConnect />
                   ) : (
                     <div>Profile connected successfully.</div>
@@ -280,18 +280,18 @@ const SetupUser = () => {
                 <div className="bg-gray-50 px-4 py-4 sm:px-6 text-right">
                   <NextStepButton
                     setStep={setCurrentStep}
-                    disabled={user.current.profiles.length === 0}
+                    disabled={user.profiles.length === 0}
                   />
                 </div>
               </div>
             )}
             {currentStep === 2 && (
-              <SetUserInfoStep setStep={setCurrentStep} user={user.current} />
+              <SetUserInfoStep setStep={setCurrentStep} user={user} />
             )}
             {currentStep === 3 && (
               <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                  {user.current.profiles.length === 0 ? (
+                  {user.profiles.length === 0 ? (
                     <GithubConnect />
                   ) : (
                     <ProfileInfo setupMode={true} />
@@ -307,11 +307,11 @@ const SetupUser = () => {
               </div>
             )}
 
-            {user.current.newUser && (
+            {user.newUser && (
               <Portal>
                 <SetUsernameModal
-                  isOpen={user.current.newUser}
-                  username={user.current.username}
+                  isOpen={user.newUser}
+                  username={user.username}
                 />
               </Portal>
             )}

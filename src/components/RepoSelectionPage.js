@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
@@ -180,8 +180,8 @@ const RepoSelectionPage = ({ selected, editMode, firstTime }) => {
   const [mutError, setMutError] = useState(null);
 
   const [repos, setRepos] = useState(null);
-  var selectedIndexes = [];
   const [selectedPositions, setSelectedPositions] = useState([]);
+  const selectedIndexes = useRef([]);
 
   useEffect(() => {
     const userStored = JSON.parse(localStorage.getItem("user"));
@@ -189,10 +189,10 @@ const RepoSelectionPage = ({ selected, editMode, firstTime }) => {
       (userRepos) => {
         setRepos(userRepos);
         if (selected.length > 0) {
-          selectedIndexes = selected.map((repo) =>
+          selectedIndexes.current = selected.map((repo) =>
             Object.keys(userRepos).indexOf(repo)
           );
-          setSelectedPositions(selectedIndexes);
+          setSelectedPositions(selectedIndexes.current);
         }
       }
     );
