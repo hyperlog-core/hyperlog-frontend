@@ -9,6 +9,9 @@ import SetUsernameModal from "../components/SetUsernameModal";
 import logo from "../logo.svg";
 import Portal from "../Portal";
 import { refreshUser } from "../utils/auth";
+import github from "../github-logo.svg";
+import stackoverflow from "../stackoverflow.svg";
+import StackoverflowConnect from "../components/StackoverflowConnect";
 
 const GET_USER_POLL = gql`
   query {
@@ -274,7 +277,37 @@ const SetupUser = () => {
                   {user.profiles.length === 0 ? (
                     <GithubConnect />
                   ) : (
-                    <div>Profile connected successfully.</div>
+                    <div className="bg-white shadow sm:rounded-lg">
+                      <div className="p-4 sm:p-6">
+                        <h3 className="inline-flex text-lg leading-6 font-medium text-gray-900">
+                          <img
+                            src={github}
+                            alt="GitHub logo"
+                            class="h-6 mr-3"
+                          />
+                          &nbsp;GitHub connected successfully!
+                        </h3>
+                      </div>
+                    </div>
+                  )}
+                  {user.stackOverflow ? (
+                    <div className="bg-white shadow sm:rounded-lg mt-5">
+                      <div className="p-4 sm:p-6">
+                        <h3 className="inline-flex text-lg leading-6 font-medium text-gray-900">
+                          <img
+                            src={stackoverflow}
+                            alt="GitHub logo"
+                            class="h-6 mr-3"
+                          />
+                          &nbsp;StackOverflow connected successfully!
+                        </h3>
+                      </div>
+                    </div>
+                  ) : (
+                    <StackoverflowConnect
+                      clientId="18592"
+                      redirectUri="http://localhost:3000"
+                    />
                   )}
                 </div>
                 <div className="bg-gray-50 px-4 py-4 sm:px-6 text-right">
