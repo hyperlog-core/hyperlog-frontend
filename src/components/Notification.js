@@ -1,5 +1,5 @@
 import React from "react";
-import Transition from "../helpers/Transition";
+import { Transition } from "@tailwindui/react";
 
 const Notification = ({ show, toggle, primaryText, secondaryText }) => {
   return (

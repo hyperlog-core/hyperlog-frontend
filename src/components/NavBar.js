@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logo from "../logo-white.svg";
-import Transition from "../helpers/Transition";
+import { Transition } from "@tailwindui/react";
 import { useRouteMatch, Link } from "react-router-dom";
 import md5 from "md5";
 
