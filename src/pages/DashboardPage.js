@@ -49,8 +49,8 @@ const DashboardPage = () => {
           `StackOverflow is connected! Reputation: ${user.stackOverflow.reputation}`
         ) : (
           <StackoverflowConnect
-            clientId="18592"
-            redirectUri="http://localhost:3000"
+            clientId={process.env.REACT_APP_STACKOVERFLOW_CLIENT_ID}
+            redirectUri={process.env.REACT_APP_STACKOVERFLOW_REDIRECT_URI}
           />
         )}
       </UserLayout>
