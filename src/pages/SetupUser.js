@@ -12,6 +12,7 @@ import { refreshUser } from "../utils/auth";
 import github from "../github-logo.svg";
 import stackoverflow from "../stackoverflow.svg";
 import StackoverflowConnect from "../components/StackoverflowConnect";
+import { useHistory } from "react-router-dom";
 
 const GET_USER_POLL = gql`
   query {
@@ -39,6 +40,7 @@ const GET_USER_POLL = gql`
 `;
 
 const SetupUser = () => {
+  const history = useHistory();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [currentStep, setCurrentStep] = useState(user.setupStep);
   const { loading, data, startPolling, stopPolling } = useQuery(GET_USER_POLL);
@@ -53,6 +55,11 @@ const SetupUser = () => {
       stopPolling();
     };
   }, [user, startPolling, stopPolling, data, loading, setUser]);
+
+  if (currentStep === 0) {
+    console.log(currentStep);
+    history.push("/home");
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
