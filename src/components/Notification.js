@@ -1,9 +1,9 @@
 import React from "react";
-import { Transition } from "@tailwindui/react";
+import Transition from "../helpers/Transition";
 
 const Notification = ({ show, toggle, primaryText, secondaryText }) => {
   return (
-    <div className="fixed inset-0 flex z-50 items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
+    <div className="fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end">
       <Transition
         show={show}
         enter="transform ease-out duration-300 transition"

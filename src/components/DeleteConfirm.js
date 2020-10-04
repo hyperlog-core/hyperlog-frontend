@@ -1,5 +1,5 @@
 import React from "react";
-import { Transition } from "@tailwindui/react";
+import { Transition } from "@headlessui/react";
 import { gql, useMutation } from "@apollo/client";
 import { logoutUser } from "../utils/auth";
 import { useHistory } from "react-router-dom";

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Portal from "../Portal";
 import github from "../github-logo.svg";
 import exclamation from "../exclamation.svg";
-import { Transition } from "@tailwindui/react";
+import { Transition } from "@headlessui/react";
 
 const connect_github = (scope) => {
   window.open(
