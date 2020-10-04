@@ -3,6 +3,8 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import UserLayout from "../layout/UserLayout";
 import { refreshUser } from "../utils/auth";
 import { BeatLoader } from "react-spinners";
+import SetUserInfoStep from "../components/SetUserInfoStep";
+import ProfileInfo from "../components/ProfileInfo";
 
 const GET_USER_POLL = gql`
   query {
@@ -13,13 +15,18 @@ const GET_USER_POLL = gql`
       username
       email
       newUser
+      showAvatar
+      themeCode
+      socialLinks
+      setupStep
+      tagline
       underConstruction
       profiles {
         id
+        accessToken
       }
       stackOverflow {
         id
-        reputation
       }
     }
   }
@@ -34,10 +41,16 @@ const MUTATION_MAKE_PUBLIC = gql`
 `;
 
 const SELECTED_MENU_ITEM =
-  "group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-900 rounded-md bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150";
+  "group flex items-center px-3 w-full py-2 text-sm leading-5 font-medium text-gray-900 rounded-md bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150";
 
 const NORMAL_MENU_ITEM =
-  "mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150";
+  "mt-1 group flex items-center px-3 w-full py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150";
+
+const SELECTED_MENU_ICON =
+  "flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150";
+
+const NORMAL_MENU_ICON =
+  "flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500 transition ease-in-out duration-150";
 
 const DashboardPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -51,6 +64,8 @@ const DashboardPage = () => {
   const [showPublicAvailability, setShowPublicAvailability] = useState(
     user.underConstruction
   );
+
+  const [selectedItem, setSelectedItem] = useState("dashboard");
 
   const [markAsConstructed, { loading: constructionLoading }] = useMutation(
     MUTATION_MAKE_PUBLIC,
@@ -119,14 +134,12 @@ const DashboardPage = () => {
                   }}
                   class="col-span-1 group relative inline-flex items-center justify-center flex-shrink-0 h-5 w-10 cursor-pointer focus:outline-none"
                 >
-                  {/* <!-- On: "bg-indigo-600", Off: "bg-gray-200" --> */}
                   <span
                     aria-hidden="true"
                     class={`${
                       portfolioConstructed ? "bg-green-100" : "bg-cool-gray-100"
                     } absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200`}
                   ></span>
-                  {/* <!-- On: "translate-x-5", Off: "translate-x-0" --> */}
                   <span
                     aria-hidden="true"
                     class={`${
@@ -141,13 +154,21 @@ const DashboardPage = () => {
         <div className="md:grid md:grid-cols-4 md:gap-6">
           <div className="md:col-span-1">
             <nav>
-              <a
-                href="#"
-                className="group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-900 rounded-md bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150"
+              <button
+                onClick={() => setSelectedItem("dashboard")}
+                className={
+                  selectedItem === "dashboard"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
                 aria-current="page"
               >
                 <svg
-                  className="flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
+                  className={
+                    selectedItem === "dashboard"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -161,13 +182,21 @@ const DashboardPage = () => {
                   />
                 </svg>
                 <span className="truncate">Dashboard</span>
-              </a>
-              <a
-                href="#"
-                className="mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150"
+              </button>
+              <button
+                onClick={() => setSelectedItem("info")}
+                className={
+                  selectedItem === "info"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
               >
                 <svg
-                  className="flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500 transition ease-in-out duration-150"
+                  className={
+                    selectedItem === "info"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -176,18 +205,26 @@ const DashboardPage = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    strokeWidth={2}
+                    d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
                   />
                 </svg>
-                <span className="truncate">Team</span>
-              </a>
-              <a
-                href="#"
-                className="mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150"
+                <span className="truncate">User Info</span>
+              </button>
+              <button
+                onClick={() => setSelectedItem("projects")}
+                className={
+                  selectedItem === "projects"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
               >
                 <svg
-                  className="flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500 transition ease-in-out duration-150"
+                  className={
+                    selectedItem === "projects"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -201,13 +238,21 @@ const DashboardPage = () => {
                   />
                 </svg>
                 <span className="truncate">Projects</span>
-              </a>
-              <a
-                href="#"
-                className="mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150"
+              </button>
+              <button
+                onClick={() => setSelectedItem("blogs")}
+                className={
+                  selectedItem === "blogs"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
               >
                 <svg
-                  className="flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500 transition ease-in-out duration-150"
+                  className={
+                    selectedItem === "blogs"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -220,14 +265,50 @@ const DashboardPage = () => {
                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                <span className="truncate">Calendar</span>
-              </a>
-              <a
-                href="#"
-                className="mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150"
+                <span className="truncate">Blogs</span>
+              </button>
+              <button
+                onClick={() => setSelectedItem("contacts")}
+                className={
+                  selectedItem === "contacts"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
               >
                 <svg
-                  className="flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500 transition ease-in-out duration-150"
+                  className={
+                    selectedItem === "contacts"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <span className="truncate">Contacts</span>
+              </button>
+              <button
+                onClick={() => setSelectedItem("settings")}
+                className={
+                  selectedItem === "settings"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
+              >
+                <svg
+                  className={
+                    selectedItem === "settings"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -236,38 +317,29 @@ const DashboardPage = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
                   />
-                </svg>
-                <span className="truncate">Documents</span>
-              </a>
-              <a
-                href="#"
-                className="mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150"
-              >
-                <svg
-                  className="flex-shrink-0 -ml-1 mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500 transition ease-in-out duration-150"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span className="truncate">Reports</span>
-              </a>
+                <span className="truncate">Settings</span>
+              </button>
             </nav>
           </div>
           <div className="mt-5 md:mt-0 md:col-span-3">
-            <div className="bg-gradient-to-br from-white to-cool-gray-100 overflow-hidden shadow sm:rounded-lg">
-              <div className="px-4 py-5 sm:p-6">Div</div>
-            </div>
+            {selectedItem === "dashboard" && <>Dashboard</>}
+            {selectedItem === "info" && (
+              <SetUserInfoStep user={user} dashboard={true} />
+            )}
+            {selectedItem === "projects" && <ProfileInfo setupMode={true} />}
+            {selectedItem === "blogs" && "blogs"}
+            {selectedItem === "contacts" && "contacts"}
+            {selectedItem === "settings" && "settings"}
           </div>
         </div>
       </UserLayout>

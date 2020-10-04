@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import { fetchUserRepositories } from "../utils/fetchUserRepositories";
+import { useHistory } from "react-router-dom";
 
 const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
   const classColors = (languageName) => {
@@ -175,7 +175,7 @@ const MUTATION_SELECT_REPOS = gql`
   }
 `;
 
-const RepoSelectionPage = ({ selected, editMode, firstTime }) => {
+const RepoSelectionPage = ({ selected, editMode, firstTime, toggleEdit }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
 
@@ -203,7 +203,11 @@ const RepoSelectionPage = ({ selected, editMode, firstTime }) => {
     {
       onCompleted: (data) => {
         if (data.selectRepos.success) {
-          history.go();
+          if (firstTime) {
+            history.go();
+          } else {
+            toggleEdit(false);
+          }
         } else {
           setMutError(data.selectRepos.errors[0]);
         }

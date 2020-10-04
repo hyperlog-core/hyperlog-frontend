@@ -18,7 +18,6 @@ const ProfileInfo = ({ analyse, loading, setupMode }) => {
       </div>
     );
   } else if (!user.data.selectedRepos) {
-    console.log(user.data);
     return (
       <RepoSelectionPage
         selected={user.data.selectedRepos ?? []}

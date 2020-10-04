@@ -1,9 +1,11 @@
 import { gql, useMutation } from "@apollo/client";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import PreviousStepButton from "../components/Buttons/PreviousStepButton";
 import { PulseLoader } from "react-spinners";
+import Notification from "../components/Notification";
+import Portal from "../Portal";
 
 const MUTATION_SET_USER_DATA = gql`
   mutation(
@@ -44,7 +46,7 @@ const MUTATION_NEXT_STEP = gql`
 const ERROR_INPUT_CLASS =
   "form-input block w-full pr-10 border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red sm:text-sm sm:leading-5";
 
-const SetUserInfoStep = ({ setStep, user }) => {
+const SetUserInfoStep = ({ setStep, user, dashboard }) => {
   const social = JSON.parse(user.socialLinks);
   const [nextStep, { loading }] = useMutation(MUTATION_NEXT_STEP, {
     onCompleted: (data) => {
@@ -52,12 +54,20 @@ const SetUserInfoStep = ({ setStep, user }) => {
     },
   });
 
+  const [notifShow, setNotifShow] = useState(false);
+
   const [setUserData, { loading: mutationLoading }] = useMutation(
     MUTATION_SET_USER_DATA,
     {
       onCompleted: (data) => {
-        if (data.setSocialLinks.success && data.setTagline.success) {
+        if (
+          data.setSocialLinks.success &&
+          data.setTagline.success &&
+          !dashboard
+        ) {
           nextStep();
+        } else if (dashboard) {
+          setNotifShow(true);
         }
       },
       onError: (err) => console.log(err),
@@ -93,8 +103,12 @@ const SetUserInfoStep = ({ setStep, user }) => {
   });
 
   return (
-    <div className="mt-5 md:mt-0 md:col-span-2">
-      <div class="bg-gray-100 overflow-hidden shadow sm:rounded-lg">
+    <div className={`${dashboard ? "" : "mt-5"} md:mt-0 md:col-span-2`}>
+      <div
+        class={`${
+          dashboard ? "bg-white" : "bg-gray-100 shadow"
+        } overflow-hidden sm:rounded-lg`}
+      >
         <div class="px-4 py-5 sm:p-6">
           <form onSubmit={formik.handleSubmit}>
             <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -314,37 +328,61 @@ const SetUserInfoStep = ({ setStep, user }) => {
             </div>
             <div className="mt-5">
               <div className="px-4 py-3 bg--cool-gray-50 sm:px-6 flex justify-between">
-                <PreviousStepButton setStep={setStep} />
-                <div className="text-right">
-                  <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150">
-                    {mutationLoading || loading ? (
-                      <PulseLoader size="10px" color="#fff" />
-                    ) : (
-                      <>
-                        Save and Continue
-                        <svg
-                          className="ml-2 -mr-0.5 h-4 w-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M9 5l7 7-7 7"
-                          ></path>
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </div>
+                {dashboard ? (
+                  <>
+                    <div></div>
+                    <div className="text-right">
+                      <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150">
+                        {mutationLoading || loading ? (
+                          <PulseLoader size="10px" color="#fff" />
+                        ) : (
+                          "Save Information"
+                        )}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <PreviousStepButton setStep={setStep} />
+                    <div className="text-right">
+                      <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150">
+                        {mutationLoading || loading ? (
+                          <PulseLoader size="10px" color="#fff" />
+                        ) : (
+                          <>
+                            Save and Continue
+                            <svg
+                              className="ml-2 -mr-0.5 h-4 w-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9 5l7 7-7 7"
+                              ></path>
+                            </svg>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </form>
         </div>
       </div>
+      <Portal>
+        <Notification
+          primaryText="Data saved successfully"
+          show={notifShow}
+          toggle={setNotifShow}
+        />
+      </Portal>
     </div>
   );
 };

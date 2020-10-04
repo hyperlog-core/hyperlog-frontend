@@ -122,6 +122,7 @@ const UserHomeDash = ({ profile, setupMode }) => {
         repos={profile.repos}
         selected={profile.selectedRepos ?? []}
         editMode={editMode}
+        toggleEdit={setEditMode}
       />
     </div>
   );
