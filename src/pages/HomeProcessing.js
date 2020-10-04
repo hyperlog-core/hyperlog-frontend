@@ -19,6 +19,7 @@ const GET_USER = gql`
       socialLinks
       setupStep
       tagline
+      underConstruction
       profiles {
         id
         accessToken

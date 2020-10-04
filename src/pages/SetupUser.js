@@ -27,6 +27,7 @@ const GET_USER_POLL = gql`
       themeCode
       setupStep
       socialLinks
+      underConstruction
       tagline
       profiles {
         id
