@@ -105,11 +105,11 @@ const SetUserInfoStep = ({ setStep, user, dashboard }) => {
   return (
     <div className={`${dashboard ? "" : "mt-5"} md:mt-0 md:col-span-2`}>
       <div
-        class={`${
+        className={`${
           dashboard ? "bg-white" : "bg-gray-100 shadow"
         } overflow-hidden sm:rounded-lg`}
       >
-        <div class="px-4 py-5 sm:p-6">
+        <div className="px-4 py-5 sm:p-6">
           <form onSubmit={formik.handleSubmit}>
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="border-b border-gray-200 px-4 py-5 sm:px-6">

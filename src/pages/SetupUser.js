@@ -291,7 +291,7 @@ const SetupUser = () => {
                             <img
                               src={github}
                               alt="GitHub logo"
-                              class="h-6 mr-3"
+                              className="h-6 mr-3"
                             />
                             &nbsp;GitHub connected successfully!
                           </h3>
@@ -305,7 +305,7 @@ const SetupUser = () => {
                             <img
                               src={stackoverflow}
                               alt="GitHub logo"
-                              class="h-6 mr-3"
+                              className="h-6 mr-3"
                             />
                             &nbsp;StackOverflow connected successfully!
                           </h3>

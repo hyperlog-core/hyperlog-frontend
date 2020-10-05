@@ -133,17 +133,17 @@ const DashboardPage = () => {
                       }, 5000);
                     }
                   }}
-                  class="col-span-1 group relative inline-flex items-center justify-center flex-shrink-0 h-5 w-10 cursor-pointer focus:outline-none"
+                  className="col-span-1 group relative inline-flex items-center justify-center flex-shrink-0 h-5 w-10 cursor-pointer focus:outline-none"
                 >
                   <span
                     aria-hidden="true"
-                    class={`${
+                    className={`${
                       portfolioConstructed ? "bg-green-100" : "bg-cool-gray-100"
                     } absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200`}
                   ></span>
                   <span
                     aria-hidden="true"
-                    class={`${
+                    className={`${
                       portfolioConstructed ? "translate-x-5" : "translate-x-0"
                     } absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform group-focus:shadow-outline-gray group-focus:border-green-300 transition-transform ease-in-out duration-200`}
                   ></span>

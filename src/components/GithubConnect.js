@@ -151,9 +151,9 @@ const GithubConnect = () => {
                   <img src={github} alt="GitHub logo" />
                   &nbsp;Connect with GitHub
                 </button>
-                <span class="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cool-gray-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-cool-gray-500"></span>
+                <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cool-gray-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cool-gray-500"></span>
                 </span>
               </span>
             </div>
