@@ -52,7 +52,5 @@ export const fetchUserRepositories = async (
     );
   }
 
-  console.log(repositories);
-
   return repositories;
 };
