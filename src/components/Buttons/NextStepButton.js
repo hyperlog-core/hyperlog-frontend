@@ -44,12 +44,12 @@ const NextStepButton = ({ setStep, disabled, completeSetup }) => {
         type="button"
         className={
           disabled
-            ? "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-100 bg-teal-600 opacity-25"
+            ? "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-100 bg-teal-600 opacity-25 cursor-not-allowed"
             : "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:border-teal-700 focus:shadow-outline-teal active:bg-teal-700 transition ease-in-out duration-150"
         }
         onClick={() => {
           if (!disabled && !completeSetup) nextStep();
-          else completeSetupMut();
+          else if (!disabled) completeSetupMut();
         }}
       >
         {!loading || !mutationLoading ? (
