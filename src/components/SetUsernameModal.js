@@ -1,5 +1,5 @@
 import React from "react";
-import Transition from "../helpers/Transition";
+import { Transition } from "@headlessui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, gql } from "@apollo/client";
@@ -59,7 +59,7 @@ const SetUsernameModal = ({ isOpen, username }) => {
   });
 
   return (
-    <div class="fixed bottom-0 inset-x-0 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">
+    <div className="fixed bottom-0 inset-x-0 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">
       <Transition
         show={isOpen}
         enter="ease-out duration-300"
@@ -69,8 +69,8 @@ const SetUsernameModal = ({ isOpen, username }) => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div class="fixed inset-0 transition-opacity">
-          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        <div className="fixed inset-0 transition-opacity">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
       </Transition>
 
@@ -84,38 +84,38 @@ const SetUsernameModal = ({ isOpen, username }) => {
         leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       >
         <div
-          class="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6"
+          className="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-headline"
         >
           <form onSubmit={formik.handleSubmit}>
             <div>
-              <div class="text-center">
+              <div className="text-center">
                 <h3
-                  class="text-lg leading-6 font-medium text-gray-900"
+                  className="text-lg leading-6 font-medium text-gray-900"
                   id="modal-headline"
                 >
                   Set New Username
                 </h3>
-                <div class="mt-2">
-                  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                    <div class="flex">
-                      <div class="flex-shrink-0">
+                <div className="mt-2">
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
                         <svg
-                          class="h-5 w-5 text-yellow-400"
+                          className="h-5 w-5 text-yellow-400"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           />
                         </svg>
                       </div>
-                      <div class="ml-3">
-                        <p class="text-sm leading-5 text-yellow-700">
+                      <div className="ml-3">
+                        <p className="text-sm leading-5 text-yellow-700">
                           You cannot change username later.
                         </p>
                       </div>
@@ -206,8 +206,8 @@ const SetUsernameModal = ({ isOpen, username }) => {
                 </div>
               </div>
             </div>
-            <div class="mt-5 sm:mt-6">
-              <span class="flex w-full rounded-md shadow-sm">
+            <div className="mt-5 sm:mt-6">
+              <span className="flex w-full rounded-md shadow-sm">
                 <button
                   type="submit"
                   disabled={
@@ -217,7 +217,7 @@ const SetUsernameModal = ({ isOpen, username }) => {
                       ? true
                       : false
                   }
-                  class={`inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 text-base leading-6 font-medium text-white shadow-sm ${
+                  className={`inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 text-base leading-6 font-medium text-white shadow-sm ${
                     (usernameValidationData &&
                       !usernameValidationData.isUsernameValid.success) ||
                     formik.errors.username

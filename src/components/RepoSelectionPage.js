@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { useHistory } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
+import { fetchUserRepositories } from "../utils/fetchUserRepositories";
+import { useHistory } from "react-router-dom";
 
 const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
   const classColors = (languageName) => {
@@ -46,7 +47,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
             <div className="flex-shrink-0">
               <img
                 className="h-12 w-12 rounded-full"
-                src={repo.imageUrl}
+                src={repo.owner.avatarUrl}
                 alt=""
               />
             </div>
@@ -57,7 +58,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                     isSelected && isEditing ? "font-bold" : "font-medium"
                   } text-indigo-600 truncate`}
                 >
-                  {repo.full_name}
+                  {repo.nameWithOwner}
                 </div>
                 <div
                   className={`mt-2 flex items-center text-sm leading-5 ${
@@ -67,16 +68,16 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                   }`}
                 >
                   {repo.isPrivate && (
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-orange-100 text-orange-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-orange-100 text-orange-800">
                       <svg
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        class="-ml-0.5 mr-1.5 h-3 w-3 text-orange-400"
+                        className="-ml-0.5 mr-1.5 h-3 w-3 text-orange-400"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                       Private Repo
@@ -89,12 +90,12 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                         <svg
                           viewBox="0 0 20 20"
                           fill="currentColor"
-                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                          className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       ) : (
@@ -102,12 +103,12 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
-                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                          className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                           ></path>
                         </svg>
@@ -119,15 +120,17 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
               </div>
               <div className="hidden md:block">
                 <div>
-                  <div className="text-sm leading-5 text-gray-900">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${classColors(
-                        repo.primaryLanguage
-                      )}`}
-                    >
-                      {repo.primaryLanguage}
-                    </span>
-                  </div>
+                  {repo.primaryLanguage ? (
+                    <div className="text-sm leading-5 text-gray-900">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${classColors(
+                          repo.primaryLanguage.name
+                        )}`}
+                      >
+                        {repo.primaryLanguage.name}
+                      </span>
+                    </div>
+                  ) : null}
                   <div className="mt-2 flex items-center text-sm leading-5 text-gray-500">
                     <svg
                       fill="currentColor"
@@ -136,7 +139,7 @@ const IndividualRepo = ({ isSelected, isEditing, index, repo, onClick }) => {
                     >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                     </svg>
-                    {repo.stargazers} Stargazers
+                    {repo.stargazerCount} Stars
                   </div>
                 </div>
               </div>
@@ -172,24 +175,39 @@ const MUTATION_SELECT_REPOS = gql`
   }
 `;
 
-const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
+const RepoSelectionPage = ({ selected, editMode, firstTime, toggleEdit }) => {
   const history = useHistory();
   const [mutError, setMutError] = useState(null);
 
-  var selectedIndexes = [];
+  const [repos, setRepos] = useState(null);
+  const [selectedPositions, setSelectedPositions] = useState([]);
+  const selectedIndexes = useRef([]);
 
-  if (selected.length > 0) {
-    selectedIndexes = selected.map((repo) => Object.keys(repos).indexOf(repo));
-  }
-
-  const [selectedPositions, setSelectedPositions] = useState(selectedIndexes);
+  useEffect(() => {
+    const userStored = JSON.parse(localStorage.getItem("user"));
+    fetchUserRepositories(userStored.profiles[0].accessToken, []).then(
+      (userRepos) => {
+        setRepos(userRepos);
+        if (selected.length > 0) {
+          selectedIndexes.current = selected.map((repo) =>
+            Object.keys(userRepos).indexOf(repo)
+          );
+          setSelectedPositions(selectedIndexes.current);
+        }
+      }
+    );
+  }, [setRepos, selected, setSelectedPositions]);
 
   const [selectRepos, { loading: mutationLoading }] = useMutation(
     MUTATION_SELECT_REPOS,
     {
       onCompleted: (data) => {
         if (data.selectRepos.success) {
-          history.go();
+          if (firstTime) {
+            history.go();
+          } else {
+            toggleEdit(false);
+          }
         } else {
           setMutError(data.selectRepos.errors[0]);
         }
@@ -215,12 +233,20 @@ const RepoSelectionPage = ({ repos, selected, editMode, firstTime }) => {
   const submit = () => {
     const arr = [];
     selectedPositions.forEach((i) => {
-      arr.push(repos[Object.keys(repos)[i]].full_name);
+      arr.push(repos[Object.keys(repos)[i]].nameWithOwner);
     });
     selectRepos({
       variables: { repos: arr },
     });
   };
+
+  if (!repos) {
+    return (
+      <div className="flex w-full h-64 justify-center items-center">
+        <PulseLoader size="20px" color="#374151" />
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Transition from "../helpers/Transition";
+import { Transition } from "@headlessui/react";
 
 const EmbedCodeModal = ({ userId, isOpen, setOpen }) => {
   const [copied, setCopied] = useState(false);
