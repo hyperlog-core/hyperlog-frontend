@@ -6,7 +6,7 @@ import GithubConnect from "../components/GithubConnect";
 import ProfileInfo from "../components/ProfileInfo";
 import SetUserInfoStep from "../components/SetUserInfoStep";
 import SetUsernameModal from "../components/SetUsernameModal";
-import logo from "../logo.svg";
+import logo from "../logo-white.svg";
 import Portal from "../Portal";
 import { refreshUser } from "../utils/auth";
 import github from "../github-logo.svg";
