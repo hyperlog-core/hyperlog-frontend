@@ -89,7 +89,7 @@ const RegisterPage = () => {
   ] = useMutation(MUTATION_USER_REGISTRATION, {
     onCompleted: (data) => {
       loginUser(data.register.login.token, data.register.login.user, false);
-      history.push("/dashboard");
+      history.push("/home");
     },
     onError: (err) => console.log(err),
   });
@@ -106,7 +106,7 @@ const RegisterPage = () => {
             data.loginWithGithub.user,
             false
           );
-          history.push("/dashboard");
+          history.push("/home");
         } else {
           setError(true);
         }
@@ -193,23 +193,23 @@ const RegisterPage = () => {
           <div>
             <div>
               {error && (
-                <div class="rounded-md bg-red-50 p-4 mb-4">
-                  <div class="flex">
-                    <div class="flex-shrink-0">
+                <div className="rounded-md bg-red-50 p-4 mb-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
                       <svg
-                        class="h-5 w-5 text-red-400"
+                        className="h-5 w-5 text-red-400"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         />
                       </svg>
                     </div>
-                    <div class="ml-3">
-                      <p class="text-sm leading-5 font-normal text-red-800">
+                    <div className="ml-3">
+                      <p className="text-sm leading-5 font-normal text-red-800">
                         Login with your password and associate the account with
                         GitHub.
                       </p>
@@ -217,9 +217,9 @@ const RegisterPage = () => {
                   </div>
                 </div>
               )}
-              <span class="w-full inline-flex rounded-md shadow-sm">
+              <span className="w-full inline-flex rounded-md shadow-sm">
                 <GitHubLogin
-                  clientId="42782b0ad960d7bae699"
+                  clientId={process.env.REACT_APP_GITHUB_AUTH_APP_ID}
                   redirectUri=""
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-600 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition duration-150 ease-in-out"
                   onSuccess={(data) =>
@@ -250,12 +250,12 @@ const RegisterPage = () => {
               </span>
             </div>
 
-            <div class="mt-6 relative">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-300"></div>
+            <div className="mt-6 relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
               </div>
-              <div class="relative flex justify-center text-sm leading-5">
-                <span class="px-2 bg-white text-gray-500">
+              <div className="relative flex justify-center text-sm leading-5">
+                <span className="px-2 bg-white text-gray-500">
                   Or do manual labour
                 </span>
               </div>

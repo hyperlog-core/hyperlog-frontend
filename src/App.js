@@ -13,6 +13,8 @@ import LoginPage from "./pages/LoginPage";
 import Logout from "./helpers/Logout";
 import NavBar from "./components/NavBar";
 import { isUserAuthenticated } from "./utils/auth";
+import HomeProcessing from "./pages/HomeProcessing";
+import SetupUser from "./pages/SetupUser";
 
 function App() {
   const loggedIn = isUserAuthenticated();
@@ -20,18 +22,25 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          {loggedIn ? <Redirect to="/dashboard" /> : <RegisterPage />}
+          {loggedIn ? <Redirect to="/home" /> : <RegisterPage />}
         </Route>
         <Route exact path="/login">
-          {loggedIn ? <Redirect to="/dashboard" /> : <LoginPage />}
+          {loggedIn ? <Redirect to="/home" /> : <LoginPage />}
         </Route>
 
         <PrivateRoute>
-          <NavBar />
+          <Route exact path="/home">
+            <HomeProcessing />
+          </Route>
+          <Route exact path="/setup">
+            <SetupUser />
+          </Route>
           <Route exact path="/dashboard">
+            <NavBar />
             <DashboardPage />
           </Route>
           <Route exact path="/profile">
+            <NavBar />
             <ProfilePage />
           </Route>
           <Route exact path="/logout">

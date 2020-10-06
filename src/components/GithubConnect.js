@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Portal from "../Portal";
 import github from "../github-logo.svg";
 import exclamation from "../exclamation.svg";
-import Transition from "../helpers/Transition";
+import { Transition } from "@headlessui/react";
 
 const connect_github = (scope) => {
   window.open(
@@ -140,7 +140,7 @@ const GithubConnect = () => {
               </p>
             </div>
             <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
-              <span className="inline-flex rounded-md shadow-sm">
+              <span className="relative inline-flex rounded-md shadow-sm">
                 <button
                   onClick={() => {
                     setIsOpen(true);
@@ -151,6 +151,10 @@ const GithubConnect = () => {
                   <img src={github} alt="GitHub logo" />
                   &nbsp;Connect with GitHub
                 </button>
+                <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cool-gray-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cool-gray-500"></span>
+                </span>
               </span>
             </div>
           </div>
