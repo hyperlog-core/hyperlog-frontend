@@ -66,7 +66,7 @@ const DashboardPage = () => {
     user.underConstruction
   );
 
-  const [selectedItem, setSelectedItem] = useState("info");
+  const [selectedItem, setSelectedItem] = useState("dashboard");
 
   const [markAsConstructed, { loading: constructionLoading }] = useMutation(
     MUTATION_MAKE_PUBLIC,
@@ -333,14 +333,22 @@ const DashboardPage = () => {
             </nav>
           </div>
           <div className="mt-5 md:mt-0 md:col-span-3">
-            {selectedItem === "dashboard" && <ComingSoon />}
+            {selectedItem === "dashboard" && (
+              <ComingSoon username={user.username} />
+            )}
             {selectedItem === "info" && (
               <SetUserInfoStep user={user} dashboard={true} />
             )}
             {selectedItem === "projects" && <ProfileInfo setupMode={true} />}
-            {selectedItem === "blogs" && <ComingSoon />}
-            {selectedItem === "contacts" && <ComingSoon />}
-            {selectedItem === "settings" && <ComingSoon />}
+            {selectedItem === "blogs" && (
+              <ComingSoon username={user.username} />
+            )}
+            {selectedItem === "contacts" && (
+              <ComingSoon username={user.username} />
+            )}
+            {selectedItem === "settings" && (
+              <ComingSoon username={user.username} />
+            )}
           </div>
         </div>
       </UserLayout>
