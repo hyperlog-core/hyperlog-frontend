@@ -6,7 +6,7 @@ import { BeatLoader } from "react-spinners";
 import SetUserInfoStep from "../components/SetUserInfoStep";
 import ProfileInfo from "../components/ProfileInfo";
 import ComingSoon from "../components/ComingSoon";
-import SettingsPage from "../components/UserSiteSettingsPage.js";
+import CustomizationsPage from "../components/UserSiteSettingsPage.js";
 
 const GET_USER_POLL = gql`
   query {
@@ -270,16 +270,16 @@ const DashboardPage = () => {
                 <span className="truncate">Blogs</span>
               </button>
               <button
-                onClick={() => setSelectedItem("contacts")}
+                onClick={() => setSelectedItem("messages")}
                 className={
-                  selectedItem === "contacts"
+                  selectedItem === "messages"
                     ? SELECTED_MENU_ITEM
                     : NORMAL_MENU_ITEM
                 }
               >
                 <svg
                   className={
-                    selectedItem === "contacts"
+                    selectedItem === "messages"
                       ? SELECTED_MENU_ICON
                       : NORMAL_MENU_ICON
                   }
@@ -292,22 +292,22 @@ const DashboardPage = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
                   />
                 </svg>
-                <span className="truncate">Contacts</span>
+                <span className="truncate">Messages</span>
               </button>
               <button
-                onClick={() => setSelectedItem("settings")}
+                onClick={() => setSelectedItem("customizations")}
                 className={
-                  selectedItem === "settings"
+                  selectedItem === "customizations"
                     ? SELECTED_MENU_ITEM
                     : NORMAL_MENU_ITEM
                 }
               >
                 <svg
                   className={
-                    selectedItem === "settings"
+                    selectedItem === "customizations"
                       ? SELECTED_MENU_ICON
                       : NORMAL_MENU_ICON
                   }
@@ -329,7 +329,7 @@ const DashboardPage = () => {
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span className="truncate">Settings</span>
+                <span className="truncate">Customizations</span>
               </button>
             </nav>
           </div>
@@ -344,11 +344,11 @@ const DashboardPage = () => {
             {selectedItem === "blogs" && (
               <ComingSoon username={user.username} />
             )}
-            {selectedItem === "contacts" && (
+            {selectedItem === "messages" && (
               <ComingSoon username={user.username} />
             )}
-            {selectedItem === "settings" && (
-              <SettingsPage theme={user.themeCode} />
+            {selectedItem === "customizations" && (
+              <CustomizationsPage theme={user.themeCode} />
             )}
           </div>
         </div>

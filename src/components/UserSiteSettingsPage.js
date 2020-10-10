@@ -9,7 +9,7 @@ const MUTATION_SET_THEME = gql`
   }
 `;
 
-const SettingsPage = ({ theme }) => {
+const CustomizationsPage = ({ theme }) => {
   const colors = [
     { id: 1, name: "Green", short: "green" },
     { id: 2, name: "Red", short: "red" },
@@ -22,6 +22,7 @@ const SettingsPage = ({ theme }) => {
     { id: 9, name: "Teal", short: "teal" },
   ];
 
+  // eslint-disable-next-line array-callback-return
   const selected = colors.find((color) => {
     if (theme === "default") {
       return colors[0];
@@ -222,4 +223,4 @@ const SettingsPage = ({ theme }) => {
   );
 };
 
-export default SettingsPage;
+export default CustomizationsPage;
