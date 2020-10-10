@@ -6,6 +6,7 @@ import { BeatLoader } from "react-spinners";
 import SetUserInfoStep from "../components/SetUserInfoStep";
 import ProfileInfo from "../components/ProfileInfo";
 import ComingSoon from "../components/ComingSoon";
+import SettingsPage from "../components/UserSiteSettingsPage.js";
 
 const GET_USER_POLL = gql`
   query {
@@ -347,7 +348,7 @@ const DashboardPage = () => {
               <ComingSoon username={user.username} />
             )}
             {selectedItem === "settings" && (
-              <ComingSoon username={user.username} />
+              <SettingsPage theme={user.themeCode} />
             )}
           </div>
         </div>
