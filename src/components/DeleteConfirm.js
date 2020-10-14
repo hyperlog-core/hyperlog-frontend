@@ -17,8 +17,9 @@ const MUTATION_DELETE_USER = gql`
 const DeleteConfirm = ({ isOpen, confirm }) => {
   const history = useHistory();
   const [deleteUser, { loading }] = useMutation(MUTATION_DELETE_USER, {
-    onCompleted({ data }) {
+    onCompleted: (data) => {
       if (data.deleteUser.success) {
+        logoutUser();
         history.push("/");
       }
     },
@@ -104,7 +105,6 @@ const DeleteConfirm = ({ isOpen, confirm }) => {
                 className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 onClick={() => {
                   deleteUser();
-                  logoutUser();
                 }}
               >
                 {loading ? (
