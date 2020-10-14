@@ -7,6 +7,7 @@ import SetUserInfoStep from "../components/SetUserInfoStep";
 import ProfileInfo from "../components/ProfileInfo";
 import ComingSoon from "../components/ComingSoon";
 import CustomizationsPage from "../components/UserSiteSettingsPage.js";
+import MessageSection from "../components/MessageSection";
 
 const GET_USER_POLL = gql`
   query {
@@ -301,7 +302,7 @@ const DashboardPage = () => {
                 <span className="truncate">Messages</span>
                 {!loading && data.outsiderMessages.count > 0 && (
                   <span
-                    class={`ml-auto inline-block py-0.5 px-3 text-xs leading-4 rounded-full ${
+                    className={`ml-auto inline-block py-0.5 px-3 text-xs leading-4 rounded-full ${
                       selectedItem === "messages"
                         ? "bg-white"
                         : "bg-gray-100 group-hover:bg-gray-200 group-focus:bg-gray-200"
@@ -358,9 +359,7 @@ const DashboardPage = () => {
             {selectedItem === "blogs" && (
               <ComingSoon username={user.username} />
             )}
-            {selectedItem === "messages" && (
-              <ComingSoon username={user.username} />
-            )}
+            {selectedItem === "messages" && <MessageSection />}
             {selectedItem === "customizations" && (
               <CustomizationsPage theme={user.themeCode} />
             )}
