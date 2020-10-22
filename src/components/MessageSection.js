@@ -5,10 +5,27 @@ import md5 from "md5";
 import { PulseLoader } from "react-spinners";
 import Portal from "../Portal";
 import { Transition } from "@headlessui/react";
+import NoData from "../no_data.svg";
 
-const GET_MESSAGES = gql`
+const GET_ALL_MESSAGES = gql`
   {
     outsiderMessages(page: 1) {
+      messages {
+        id
+        senderName
+        senderEmail
+        text
+        time
+        isArchived
+      }
+      count
+    }
+  }
+`;
+
+const GET_NEW_MESSAGES = gql`
+  {
+    outsiderMessages(page: 1, isArchived: false) {
       messages {
         id
         senderName
@@ -31,9 +48,23 @@ const MUTATION_ARCHIVE_MESSAGE = gql`
 `;
 
 const MessageSection = () => {
-  const { loading, data, startPolling, stopPolling } = useQuery(GET_MESSAGES);
+  const { loading, data, startPolling, stopPolling } = useQuery(
+    GET_NEW_MESSAGES
+  );
+
+  const { loading: allLoading, data: allMessages, refetch } = useQuery(
+    GET_ALL_MESSAGES
+  );
+
+  const [view, setNewView] = useState("new");
   const [isOpen, setIsOpen] = useState(-1);
-  const [archiveMessage] = useMutation(MUTATION_ARCHIVE_MESSAGE);
+  const [archiveMessage] = useMutation(MUTATION_ARCHIVE_MESSAGE, {
+    onCompleted: (data) => {
+      if (data.toggleArchiveOutsiderMessage.new) {
+        refetch();
+      }
+    },
+  });
 
   useEffect(() => {
     startPolling(1000);
@@ -42,7 +73,7 @@ const MessageSection = () => {
     };
   }, [startPolling, stopPolling]);
 
-  if (loading) {
+  if (loading || allLoading) {
     return (
       <div className="flex w-full h-64 justify-center items-center">
         <PulseLoader size="20px" color="#374151" />
@@ -52,21 +83,85 @@ const MessageSection = () => {
 
   return (
     <div>
-      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {data.outsiderMessages.messages.map((message, index) => {
-          if (!message.isArchived) {
-            return (
-              <ListItem
-                key={message.id}
-                archive={archiveMessage}
-                index={index}
-                message={message}
-                setIsOpen={setIsOpen}
-              />
-            );
-          }
-        })}
-      </ul>
+      <div class="pb-5 mb-5 border-b border-gray-200 space-y-3 sm:flex sm:items-center sm:justify-between sm:space-x-4 sm:space-y-0">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Messages</h3>
+        {allMessages.outsiderMessages.count > 0 && (
+          <div>
+            <span class="shadow-sm rounded-md">
+              <button
+                type="button"
+                onClick={() =>
+                  view === "all" ? setNewView("new") : setNewView("all")
+                }
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out"
+              >
+                {view === "all" ? "Read New Messages" : "Read All Messages"}
+              </button>
+            </span>
+          </div>
+        )}
+      </div>
+
+      {data.outsiderMessages.count > 0 ? (
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {view === "new" &&
+            data.outsiderMessages.messages.map((message, index) => {
+              return (
+                <ListItem
+                  key={message.id}
+                  archive={archiveMessage}
+                  index={index}
+                  message={message}
+                  setIsOpen={setIsOpen}
+                />
+              );
+            })}
+          {view === "all" &&
+            allMessages.outsiderMessages.messages.map((message, index) => {
+              return (
+                <ListItem
+                  key={message.id}
+                  archive={archiveMessage}
+                  index={index}
+                  message={message}
+                  setIsOpen={setIsOpen}
+                />
+              );
+            })}
+        </ul>
+      ) : (
+        <>
+          {view === "all" ? (
+            <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {allMessages.outsiderMessages.messages.map((message, index) => (
+                <ListItem
+                  key={message.id}
+                  archive={archiveMessage}
+                  index={index}
+                  message={message}
+                  setIsOpen={setIsOpen}
+                />
+              ))}
+            </ul>
+          ) : (
+            <div className="flex flex-col justify-center items-center w-full h-96 bg-gray-50 rounded-lg">
+              <img src={NoData} alt="No messages found" className="h-32 my-5" />
+              <span className="text-xl font-medium text-gray-800 my-5">
+                You don't have any new messages
+              </span>
+              {allMessages.outsiderMessages.count > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setNewView("all")}
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-cool-gray-700 bg-cool-gray-100 hover:bg-cool-gray-50 focus:outline-none focus:border-cool-gray-300 focus:shadow-outline-cool-gray active:bg-cool-gray-200 transition ease-in-out duration-150"
+                >
+                  Read all messages
+                </button>
+              )}
+            </div>
+          )}
+        </>
+      )}
       {isOpen !== -1 && (
         <Portal>
           <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -146,10 +241,12 @@ const MessageSection = () => {
                                 Sender Name
                               </dt>
                               <dd className="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                                {
-                                  data.outsiderMessages.messages[isOpen]
-                                    .senderName
-                                }
+                                {view === "all"
+                                  ? allMessages.outsiderMessages.messages[
+                                      isOpen
+                                    ].senderName
+                                  : data.outsiderMessages.messages[isOpen]
+                                      .senderName}
                               </dd>
                             </div>
                             <div className="mt-8 sm:grid sm:mt-5 sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -157,10 +254,12 @@ const MessageSection = () => {
                                 Email address
                               </dt>
                               <dd className="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                                {
-                                  data.outsiderMessages.messages[isOpen]
-                                    .senderEmail
-                                }
+                                {view === "all"
+                                  ? allMessages.outsiderMessages.messages[
+                                      isOpen
+                                    ].senderEmail
+                                  : data.outsiderMessages.messages[isOpen]
+                                      .senderEmail}
                               </dd>
                             </div>
                             <div className="mt-8 sm:grid sm:mt-5 sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
@@ -168,7 +267,11 @@ const MessageSection = () => {
                                 Message
                               </dt>
                               <dd className="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                                {data.outsiderMessages.messages[isOpen].text}
+                                {view === "all"
+                                  ? allMessages.outsiderMessages.messages[
+                                      isOpen
+                                    ].text
+                                  : data.outsiderMessages.messages[isOpen].text}
                               </dd>
                             </div>
                           </dl>
@@ -197,9 +300,14 @@ const MessageSection = () => {
                         <button
                           type="button"
                           onClick={() => {
+                            let id =
+                              view === "all"
+                                ? allMessages.outsiderMessages.messages[isOpen]
+                                    .id
+                                : data.outsiderMessages.messages[isOpen].id;
                             archiveMessage({
                               variables: {
-                                id: data.outsiderMessages.messages[isOpen].id,
+                                id,
                               },
                             });
                             setIsOpen(-1);
@@ -292,21 +400,39 @@ const ListItem = ({ message, index, setIsOpen, archive }) => {
                 }}
                 className="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150"
               >
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-                  />
-                </svg>
-                <span className="ml-3">Archive</span>
+                {message.isArchived ? (
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
+                    <path
+                      fillRule="evenodd"
+                      d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                    />
+                  </svg>
+                )}
+                <span className="ml-3">
+                  {message.isArchived ? "Unarchive" : "Archive"}
+                </span>
               </a>
             </div>
           </div>

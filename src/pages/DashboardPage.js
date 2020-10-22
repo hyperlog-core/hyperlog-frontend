@@ -32,7 +32,7 @@ const GET_USER_POLL = gql`
         id
       }
     }
-    outsiderMessages(page: 1) {
+    outsiderMessages(page: 1, isArchived: false) {
       count
     }
   }
