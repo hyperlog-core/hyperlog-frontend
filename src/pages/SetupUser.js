@@ -36,6 +36,11 @@ const GET_USER_POLL = gql`
       stackOverflow {
         id
       }
+      contactInfo {
+        address
+        email
+        phone
+      }
     }
   }
 `;

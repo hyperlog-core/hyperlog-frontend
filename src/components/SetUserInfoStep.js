@@ -6,6 +6,7 @@ import PreviousStepButton from "../components/Buttons/PreviousStepButton";
 import { PulseLoader } from "react-spinners";
 import Notification from "../components/Notification";
 import Portal from "../Portal";
+import PhoneInput from "react-phone-input-2";
 
 const MUTATION_SET_USER_DATA = gql`
   mutation(
@@ -17,6 +18,9 @@ const MUTATION_SET_USER_DATA = gql`
     $dribble: String
     $facebook: String
     $stackoverflow: String
+    $address: String
+    $email: String!
+    $phone: String
   ) {
     setSocialLinks(
       twitter: $twitter
@@ -31,6 +35,11 @@ const MUTATION_SET_USER_DATA = gql`
     }
     setTagline(tagline: $tagline) {
       success
+    }
+    addContactInfo(address: $address, email: $email, phone: $phone) {
+      contactInfo {
+        id
+      }
     }
   }
 `;
@@ -83,6 +92,9 @@ const SetUserInfoStep = ({ setStep, user, dashboard }) => {
       linkedin: social.linkedin ?? "",
       stackoverflow: social.stackoverflow ?? "",
       tagline: user.tagline ?? "",
+      address: (user.contactInfo && user.contactInfo.address) ?? "",
+      phone: (user.contactInfo && user.contactInfo.phone) ?? "",
+      email: (user.contactInfo && user.contactInfo.email) ?? user.email,
       dribble: social.dribble ?? "",
     },
     validationSchema: Yup.object({
@@ -92,6 +104,9 @@ const SetUserInfoStep = ({ setStep, user, dashboard }) => {
       facebook: Yup.string(),
       stackoverflow: Yup.number(),
       tagline: Yup.string().max(255).required(),
+      address: Yup.string().min(10),
+      email: Yup.string().email().required(),
+      phone: Yup.string(),
       dribble: Yup.string(),
       linkedin: Yup.string(),
     }),
@@ -160,6 +175,165 @@ const SetUserInfoStep = ({ setStep, user, dashboard }) => {
                     {formik.touched.tagline && formik.errors.tagline ? (
                       <p className="mt-2 text-sm text-red-600" id="email-error">
                         Come on, you gotta have the tagline
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2"
+                  >
+                    Address
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <div className="max-w-lg rounded-md shadow-sm sm:max-w-xs">
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <input
+                          id="address"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.address}
+                          className={
+                            formik.touched.address && formik.errors.address
+                              ? ERROR_INPUT_CLASS
+                              : "form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          }
+                          placeholder="Not compulsory"
+                        />
+                        {formik.touched.address && formik.errors.address ? (
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg
+                              className="h-5 w-5 text-red-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                    {formik.touched.address && formik.errors.address ? (
+                      <p className="mt-2 text-sm text-red-600" id="email-error">
+                        Please put down a proper address. You can also leave
+                        this blank.
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2"
+                  >
+                    Contact Email
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <div className="max-w-lg rounded-md shadow-sm sm:max-w-xs">
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <input
+                          id="email"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.email}
+                          className={
+                            formik.touched.email && formik.errors.email
+                              ? ERROR_INPUT_CLASS
+                              : "form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          }
+                          placeholder="Contact Email, ya know?"
+                        />
+                        {formik.touched.email && formik.errors.email ? (
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg
+                              className="h-5 w-5 text-red-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                    {formik.touched.email && formik.errors.email ? (
+                      <p className="mt-2 text-sm text-red-600" id="email-error">
+                        Pff, you gotta have the contact email
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2"
+                  >
+                    Phone Number
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <div className="max-w-lg rounded-md shadow-sm sm:max-w-xs">
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        {/* <input
+                          id="phone"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.phone}
+                          className={
+                            formik.touched.phone && formik.errors.phone
+                              ? ERROR_INPUT_CLASS
+                              : "form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          }
+                          placeholder="Again, not compulsory"
+                        /> */}
+                        <PhoneInput
+                          inputProps={{
+                            id: "phone",
+                            name: "phone",
+                          }}
+                          onBlur={formik.handleBlur}
+                          onChange={(_phoneNumber, _country, e) =>
+                            formik.handleChange(e)
+                          }
+                          value={formik.values.phone}
+                          placeholder="Again, not compulsory"
+                          disableDropdown={true}
+                          specialLabel={false}
+                          inputClass={
+                            formik.touched.phone && formik.errors.phone
+                              ? ERROR_INPUT_CLASS
+                              : "form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          }
+                        />
+                        {formik.touched.phone && formik.errors.phone ? (
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg
+                              className="h-5 w-5 text-red-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                    {formik.touched.phone && formik.errors.phone ? (
+                      <p className="mt-2 text-sm text-red-600" id="email-error">
+                        Hey, if this is wrong, I don't think anyone's contacting
+                        you.
                       </p>
                     ) : null}
                   </div>

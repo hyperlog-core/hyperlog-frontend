@@ -27,6 +27,11 @@ const GET_USER = gql`
       stackOverflow {
         id
       }
+      contactInfo {
+        address
+        email
+        phone
+      }
     }
   }
 `;

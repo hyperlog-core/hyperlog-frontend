@@ -31,6 +31,11 @@ const GET_USER_POLL = gql`
       stackOverflow {
         id
       }
+      contactInfo {
+        address
+        email
+        phone
+      }
     }
     outsiderMessages(page: 1, isArchived: false) {
       count
