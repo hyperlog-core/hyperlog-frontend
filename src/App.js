@@ -15,6 +15,7 @@ import NavBar from "./components/NavBar";
 import { isUserAuthenticated } from "./utils/auth";
 import HomeProcessing from "./pages/HomeProcessing";
 import SetupUser from "./pages/SetupUser";
+import BlogEditor from "./pages/BlogEditor";
 
 function App() {
   const loggedIn = isUserAuthenticated();
@@ -42,6 +43,9 @@ function App() {
           <Route exact path="/profile">
             <NavBar />
             <ProfilePage />
+          </Route>
+          <Route exact path="/new_post">
+            <BlogEditor />
           </Route>
           <Route exact path="/logout">
             <Logout />
