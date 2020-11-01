@@ -22,10 +22,17 @@ export const EDITOR_JS_TOOLS = {
   linkTool: {
     class: LinkTool,
     config: {
-      endpoint: "https://rewygx51b7.execute-api.us-east-1.amazonaws.com/url",
+      endpoint: `${process.env.REACT_APP_EDITOR_BACKEND}/url`,
     },
   },
-  image: Image,
+  image: {
+    class: Image,
+    config: {
+      endpoints: {
+        byFile: `${process.env.REACT_APP_EDITOR_BACKEND}/file`,
+      },
+    },
+  },
   header: Header,
   quote: Quote,
   marker: Marker,
