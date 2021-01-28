@@ -7,6 +7,7 @@ import SetUserInfoStep from "../components/SetUserInfoStep";
 import ProfileInfo from "../components/ProfileInfo";
 import ComingSoon from "../components/ComingSoon";
 import MessageSection from "../components/MessageSection";
+import AboutEdit from "../components/AboutEdit";
 
 const GET_USER_POLL = gql`
   query {
@@ -18,7 +19,7 @@ const GET_USER_POLL = gql`
       email
       newUser
       showAvatar
-      themeCode
+      about
       socialLinks
       setupStep
       tagline
@@ -51,7 +52,7 @@ const MUTATION_MAKE_PUBLIC = gql`
 `;
 
 const SELECTED_MENU_ITEM =
-  "group flex items-center px-3 w-full py-2 text-sm leading-5 font-medium text-gray-900 rounded-md bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150";
+  "mt-1 group flex items-center px-3 w-full py-2 text-sm leading-5 font-medium text-gray-900 rounded-md bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150";
 
 const NORMAL_MENU_ITEM =
   "mt-1 group flex items-center px-3 w-full py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150";
@@ -278,6 +279,34 @@ const DashboardPage = () => {
                 <span className="truncate">Blogs</span>
               </button>
               <button
+                onClick={() => setSelectedItem("about-page")}
+                className={
+                  selectedItem === "about-page"
+                    ? SELECTED_MENU_ITEM
+                    : NORMAL_MENU_ITEM
+                }
+              >
+                <svg
+                  className={
+                    selectedItem === "about-page"
+                      ? SELECTED_MENU_ICON
+                      : NORMAL_MENU_ICON
+                  }
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                <span className="truncate">About Page</span>
+              </button>
+              <button
                 onClick={() => setSelectedItem("messages")}
                 className={
                   selectedItem === "messages"
@@ -330,6 +359,7 @@ const DashboardPage = () => {
               <ComingSoon username={user.username} />
             )}
             {selectedItem === "messages" && <MessageSection />}
+            {selectedItem === "about-page" && <AboutEdit user={user} />}
           </div>
         </div>
       </UserLayout>

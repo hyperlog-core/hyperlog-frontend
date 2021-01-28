@@ -7,6 +7,7 @@
     "@fullhuman/postcss-purgecss": "^2.3.0",
     "@headlessui/react": "^0.2.0",
     "@sentry/react": "^5.19.2",
+    "@tailwindcss/typography": "^0.4.0",
     "@tailwindcss/ui": "^0.6.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -29,6 +30,8 @@
     "react-scripts": "3.4.1",
     "react-spinners": "^0.8.3",
     "react-transition-group": "^4.4.1",
+    "rich-markdown-editor": "^11.1.6",
+    "styled-components": "^5.2.1",
     "swr": "^0.3.0",
     "tailwindcss": "^1.8.10",
     "yup": "^0.29.1"
