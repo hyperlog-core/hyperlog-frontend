@@ -64,6 +64,7 @@ const NewProject = ({ isOpen, setIsOpen, project, setProject, refetch }) => {
 
   const [addNewProject, { loading }] = useMutation(MUTATION_ADD_NEW_PROJECT, {
     onCompleted: () => {
+      refetch();
       setSelectedRepos([]);
       setIsOpen(false);
     },
