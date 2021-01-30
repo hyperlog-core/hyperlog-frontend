@@ -83,17 +83,19 @@ const MessageSection = () => {
 
   return (
     <div>
-      <div class="pb-5 mb-5 border-b border-gray-200 space-y-3 sm:flex sm:items-center sm:justify-between sm:space-x-4 sm:space-y-0">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Messages</h3>
+      <div className="pb-5 mb-5 border-b border-gray-200 space-y-3 sm:flex sm:items-center sm:justify-between sm:space-x-4 sm:space-y-0">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          Messages
+        </h3>
         {allMessages.outsiderMessages.count > 0 && (
           <div>
-            <span class="shadow-sm rounded-md">
+            <span className="shadow-sm rounded-md">
               <button
                 type="button"
                 onClick={() =>
                   view === "all" ? setNewView("new") : setNewView("all")
                 }
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out"
               >
                 {view === "all" ? "Read New Messages" : "Read All Messages"}
               </button>
@@ -153,7 +155,7 @@ const MessageSection = () => {
                 <button
                   type="button"
                   onClick={() => setNewView("all")}
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-cool-gray-700 bg-cool-gray-100 hover:bg-cool-gray-50 focus:outline-none focus:border-cool-gray-300 focus:shadow-outline-cool-gray active:bg-cool-gray-200 transition ease-in-out duration-150"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-cool-gray-700 bg-cool-gray-100 hover:bg-cool-gray-50 focus:outline-none focus:border-cool-gray-300 focus:shadow-outline-cool-gray active:bg-cool-gray-200 transition ease-in-out duration-150"
                 >
                   Read all messages
                 </button>

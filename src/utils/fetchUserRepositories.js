@@ -21,6 +21,8 @@ export const fetchUserRepositories = async (
               nameWithOwner
               description
               stargazerCount
+              isFork
+              homepageUrl
               isPrivate
               primaryLanguage{
                 name

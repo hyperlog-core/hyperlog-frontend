@@ -4,10 +4,10 @@ import UserLayout from "../layout/UserLayout";
 import { refreshUser } from "../utils/auth";
 import { BeatLoader } from "react-spinners";
 import SetUserInfoStep from "../components/SetUserInfoStep";
-import ProfileInfo from "../components/ProfileInfo";
 import ComingSoon from "../components/ComingSoon";
 import MessageSection from "../components/MessageSection";
 import AboutEdit from "../components/AboutEdit";
+import ProjectSection from "../components/Projects/ProjectSection";
 
 const GET_USER_POLL = gql`
   query {
@@ -76,7 +76,7 @@ const DashboardPage = () => {
     user.underConstruction
   );
 
-  const [selectedItem, setSelectedItem] = useState("dashboard");
+  const [selectedItem, setSelectedItem] = useState("projects");
 
   const [markAsConstructed, { loading: constructionLoading }] = useMutation(
     MUTATION_MAKE_PUBLIC,
@@ -354,7 +354,7 @@ const DashboardPage = () => {
             {selectedItem === "info" && (
               <SetUserInfoStep user={user} dashboard={true} />
             )}
-            {selectedItem === "projects" && <ProfileInfo setupMode={true} />}
+            {selectedItem === "projects" && <ProjectSection />}
             {selectedItem === "blogs" && (
               <ComingSoon username={user.username} />
             )}
