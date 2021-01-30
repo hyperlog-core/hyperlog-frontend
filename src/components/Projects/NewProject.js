@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { Transition } from "@headlessui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReposInput from "./ReposInput";
 import MoonLoader from "react-spinners/MoonLoader";
 
@@ -27,7 +27,27 @@ const MUTATION_ADD_NEW_PROJECT = gql`
   }
 `;
 
-const NewProject = ({ isOpen, setIsOpen }) => {
+const MUTATION_UPDATE_PROJECT = gql`
+  mutation(
+    $slug: String!
+    $description: String!
+    $name: String!
+    $repos: [String!]!
+    $tagline: String!
+  ) {
+    updateProject(
+      slug: $slug
+      description: $description
+      name: $name
+      repos: $repos
+      tagline: $tagline
+    ) {
+      messages
+    }
+  }
+`;
+
+const NewProject = ({ isOpen, setIsOpen, project, setProject, refetch }) => {
   const ERROR_CLASS_INPUT =
     "block w-full shadow-sm sm:text-sm focus:ring-red-500 focus:border-red-500 border-red-300 rounded-md";
   const NORMAL_CLASS_INPUT =
@@ -35,8 +55,16 @@ const NewProject = ({ isOpen, setIsOpen }) => {
 
   const [selectedRepos, setSelectedRepos] = useState([]);
 
+  useEffect(() => {
+    const select = project
+      ? project.repos.map((project) => project.fullName)
+      : [];
+    setSelectedRepos(select);
+  }, [setSelectedRepos, project]);
+
   const [addNewProject, { loading }] = useMutation(MUTATION_ADD_NEW_PROJECT, {
     onCompleted: () => {
+      setSelectedRepos([]);
       setIsOpen(false);
     },
     onError: (err) => {
@@ -44,12 +72,25 @@ const NewProject = ({ isOpen, setIsOpen }) => {
     },
   });
 
+  const [updateProject, { loading: updateLoading }] = useMutation(
+    MUTATION_UPDATE_PROJECT,
+    {
+      onCompleted: () => {
+        refetch();
+        setSelectedRepos([]);
+        setProject(null);
+        setIsOpen(false);
+      },
+    }
+  );
+
   const formik = useFormik({
     initialValues: {
-      name: "",
-      tagline: "",
-      description: "",
+      name: project ? project.name : "",
+      tagline: project ? project.tagline : "",
+      description: project ? project.description : "",
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
       tagline: Yup.string().required("Required"),
@@ -57,13 +98,22 @@ const NewProject = ({ isOpen, setIsOpen }) => {
     }),
     onSubmit: (values) => {
       if (selectedRepos.length > 0) {
-        console.log(selectedRepos);
-        addNewProject({
-          variables: {
-            ...values,
-            repos: selectedRepos,
-          },
-        });
+        if (project) {
+          updateProject({
+            variables: {
+              ...values,
+              repos: selectedRepos,
+              slug: project.slug,
+            },
+          });
+        } else {
+          addNewProject({
+            variables: {
+              ...values,
+              repos: selectedRepos,
+            },
+          });
+        }
       }
       return false;
     },
@@ -116,11 +166,12 @@ const NewProject = ({ isOpen, setIsOpen }) => {
                               id="slide-over-heading"
                               className="text-lg font-medium text-gray-100"
                             >
-                              New project
+                              {project ? "Update Project" : "New project"}
                             </h2>
                             <p className="text-sm text-white">
-                              Get started by filling in the information below to
-                              create your new project.
+                              {project
+                                ? "Missed something? Or just viewing the project?"
+                                : "Get started by filling in the information below to create your new project."}
                             </p>
                           </div>
                           <div className="h-7 flex items-center">
@@ -240,6 +291,7 @@ const NewProject = ({ isOpen, setIsOpen }) => {
                           onClick={() => {
                             formik.resetForm();
                             setSelectedRepos([]);
+                            if (setProject) setProject(null);
                             setIsOpen(false);
                           }}
                           className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
@@ -254,14 +306,13 @@ const NewProject = ({ isOpen, setIsOpen }) => {
                               : "opacity-50"
                           }`}
                         >
-                          {!loading ? (
+                          {(loading || updateLoading) && (
                             <>
                               <MoonLoader size="16px" color="#ffffff" />
-                              &nbsp; Creating
+                              &nbsp;
                             </>
-                          ) : (
-                            "Create"
                           )}
+                          {project ? "Update" : "Create"}
                         </button>
                       </div>
                     </div>

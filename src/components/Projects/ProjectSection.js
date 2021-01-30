@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Portal from "../../Portal";
 import NewProject from "./NewProject";
+import ProjectList from "./ProjectList";
 
 const ProjectSection = () => {
   const [newProjectOpen, setNewProjectOpen] = useState(false);
@@ -27,6 +28,8 @@ const ProjectSection = () => {
           </button>
         </div>
       </div>
+
+      <ProjectList />
 
       <Portal>
         <NewProject isOpen={newProjectOpen} setIsOpen={setNewProjectOpen} />
